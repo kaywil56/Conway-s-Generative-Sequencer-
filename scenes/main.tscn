@@ -1,6 +1,21 @@
-[gd_scene load_steps=2 format=3 uid="uid://oaq7vocf5mvb"]
+[gd_scene load_steps=5 format=3 uid="uid://oaq7vocf5mvb"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_gxiwc"]
+[ext_resource type="Texture2D" uid="uid://cw5uxdei2x8qt" path="res://assets/square.png" id="2_a6cou"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3ex13"]
+texture = ExtResource("2_a6cou")
+texture_region_size = Vector2i(30, 30)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_0ug3u"]
+tile_size = Vector2i(30, 30)
+sources/1 = SubResource("TileSetAtlasSource_3ex13")
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_gxiwc")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_set = SubResource("TileSet_0ug3u")
+
+[node name="Camera2D" type="Camera2D" parent="."]
