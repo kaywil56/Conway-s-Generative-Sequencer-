@@ -1,18 +1,17 @@
 [gd_scene load_steps=5 format=3 uid="uid://oaq7vocf5mvb"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_gxiwc"]
-[ext_resource type="Texture2D" uid="uid://dwptnqfea43f5" path="res://assets/spritesheet.png" id="2_bh6fx"]
+[ext_resource type="Texture2D" uid="uid://fwe5g74rdvdq" path="res://assets/spritesheet.png" id="2_bh6fx"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ygqh0"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_khysg"]
 texture = ExtResource("2_bh6fx")
 texture_region_size = Vector2i(30, 30)
 0:0/0 = 0
 1:0/0 = 0
-0:1/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_0ug3u"]
 tile_size = Vector2i(30, 30)
-sources/0 = SubResource("TileSetAtlasSource_ygqh0")
+sources/0 = SubResource("TileSetAtlasSource_khysg")
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_gxiwc")
@@ -21,3 +20,9 @@ script = ExtResource("1_gxiwc")
 tile_set = SubResource("TileSet_0ug3u")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.2
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
