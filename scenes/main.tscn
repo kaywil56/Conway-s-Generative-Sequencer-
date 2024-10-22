@@ -1,16 +1,18 @@
 [gd_scene load_steps=5 format=3 uid="uid://oaq7vocf5mvb"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_gxiwc"]
-[ext_resource type="Texture2D" uid="uid://cw5uxdei2x8qt" path="res://assets/square.png" id="2_a6cou"]
+[ext_resource type="Texture2D" uid="uid://dwptnqfea43f5" path="res://assets/spritesheet.png" id="2_bh6fx"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3ex13"]
-texture = ExtResource("2_a6cou")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ygqh0"]
+texture = ExtResource("2_bh6fx")
 texture_region_size = Vector2i(30, 30)
 0:0/0 = 0
+1:0/0 = 0
+0:1/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_0ug3u"]
 tile_size = Vector2i(30, 30)
-sources/1 = SubResource("TileSetAtlasSource_3ex13")
+sources/0 = SubResource("TileSetAtlasSource_ygqh0")
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_gxiwc")
