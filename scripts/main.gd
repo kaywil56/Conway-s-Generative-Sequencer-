@@ -13,6 +13,7 @@ const TileAtlasCoordinates = {
 const GridWidth = 28
 const GridHeight = 21
 
+var note_scene = preload("res://scenes/note.tscn")
 @onready var tile_map_layer = $TileMapLayer
 @onready var camera = $Camera2D
 
@@ -23,6 +24,7 @@ func _ready() -> void:
 	random_seed()
 	draw_grid()
 	center_camera()
+	add_notes()
 
 func center_camera():
 	var size = Vector2i(GridWidth, GridHeight) * tile_map_layer.tile_set.tile_size
@@ -68,6 +70,17 @@ func next_gen() -> void:
 func draw_grid() -> void:
 	for position in cells:
 		tile_map_layer.set_cell(position, 0, TileAtlasCoordinates[TileType.ALIVE] if cells[position] else TileAtlasCoordinates[TileType.DEAD])
+
+func add_notes() -> void:
+	var used_cells = tile_map_layer.get_used_cells()
+	for cell in used_cells:
+		var global_cell_position = tile_map_layer.map_to_local(cell)
+		add_note(global_cell_position)
+
+func add_note(position: Vector2) -> void:
+	var note_instance = note_scene.instantiate()
+	note_instance.global_position = position
+	add_child(note_instance)
 
 func _on_timer_timeout() -> void:
 	draw_grid()
