@@ -17,6 +17,7 @@ config/features=PackedStringArray("4.3", "GL Compatibility")
 [file_customization]
 
 folder_colors={
+"res://addons/": "teal",
 "res://assets/": "red",
 "res://resources/": "orange",
 "res://scenes/": "yellow",

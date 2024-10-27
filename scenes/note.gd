@@ -4,3 +4,6 @@ extends Node2D
 
 func set_label(text: String) -> void:
 	label.text = text
+
+func get_label() -> String:
+	return label.text

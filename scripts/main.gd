@@ -15,6 +15,7 @@ const GridHeight = 18
 var scale_manager: ScaleManager
 var note_manager: NoteManager
 var note_group_selection: Dictionary
+var midi: Midi
 
 @onready var tile_map_layer = $TileMapLayer
 @onready var camera = $Camera2D
@@ -23,6 +24,8 @@ var note_group_selection: Dictionary
 var cells: Dictionary
 
 func _ready() -> void:
+	midi = Midi.new()
+	midi.prepare_midi()
 	connect_signals()
 	scale_manager = ScaleManager.new()
 	note_manager = NoteManager.new(self, tile_map_layer)
@@ -61,7 +64,7 @@ func handle_note_group_selected(root, note_groups) -> void:
 func random_seed() -> void:
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()
-	var probability = 20
+	var probability = 10
 	for x in range(0, GridWidth):
 		for y in range(0, GridHeight):
 			var random = rng.randi_range(0, 100)
@@ -99,6 +102,17 @@ func draw_grid() -> void:
 	for position in cells:
 		tile_map_layer.set_cell(position, 0, TileAtlasCoordinates[TileType.ALIVE] if cells[position] else TileAtlasCoordinates[TileType.DEAD])
 
+func play_notes():
+	for cell in cells:
+		if cells[cell]:
+			var note_node = note_manager.get_note_by_position(cell)
+			if note_node:
+				var note_value = note_node.get_label()
+				if note_value:
+					var note_number = scale_manager.note_to_midi_number(note_value)
+					midi.play_note(note_number)
+
 func _on_timer_timeout() -> void:
 	draw_grid()
+	play_notes()
 	next_gen()
