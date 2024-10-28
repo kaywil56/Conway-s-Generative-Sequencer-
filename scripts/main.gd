@@ -14,7 +14,6 @@ const GridHeight = 18
 
 var scale_manager: ScaleManager
 var note_manager: NoteManager
-var note_group_selection: Dictionary
 var game_of_life: GameOfLife
 var midi: Midi
 
@@ -35,15 +34,12 @@ func _ready() -> void:
 	draw_grid(cells)
 	center_camera()
 	var notes = scale_manager.get_notes()
+	var note_group_names = scale_manager.get_note_group_names()
 	var note_groups = scale_manager.get_note_groups()
-	note_group_selection = {
-		"root": notes[0],
-		"note_group": note_groups[0]
-	}
 	ui.init_root_select_menu(notes)
 	ui.init_note_group_menu(note_groups)
 	note_manager.add_notes()
-	var notes_in_group = scale_manager.get_notes_in_group(note_group_selection)
+	var notes_in_group = scale_manager.get_notes_in_group(notes[0], note_group_names[0])
 	note_manager.set_notes(notes_in_group)
 
 func center_camera():
@@ -65,9 +61,7 @@ func handle_play(is_playing) -> void:
 		draw_grid(cells)
 
 func handle_note_group_selected(root, note_groups) -> void:
-	note_group_selection["root"] = root
-	note_group_selection["note_group"] = note_groups
-	var notes_in_group = scale_manager.get_notes_in_group(note_group_selection)
+	var notes_in_group = scale_manager.get_notes_in_group(root, note_groups)
 	note_manager.set_notes(notes_in_group)
 	
 func _on_timer_timeout() -> void:

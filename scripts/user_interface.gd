@@ -9,12 +9,13 @@ signal play(toggled)
 func _ready() -> void:
 	connect_signals()
 
-func init_note_group_menu(note_groups: Array) -> void:
+func init_note_group_menu(note_groups: Dictionary) -> void:
 	var popup = note_group_option_button.get_popup()
-	for idx in range(note_groups.size()):
-		popup.add_item(note_groups[idx], idx)
-	
-	note_group_option_button.text = note_groups[0]
+	for i in note_groups:
+		popup.add_separator(i)
+		for j in note_groups[i]:
+			popup.add_item(j)
+	note_group_option_button.text = note_groups[note_groups.keys()[0]].keys()[0]
 
 func init_root_select_menu(roots: Array) -> void:
 	var popup = root_note_option_button.get_popup()

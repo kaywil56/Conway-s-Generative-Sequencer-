@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dcnnbasokgb2x"]
+[gd_scene load_steps=3 format=3 uid="uid://dcnnbasokgb2x"]
 
 [ext_resource type="Script" path="res://scripts/user_interface.gd" id="1_w57q7"]
+[ext_resource type="Theme" uid="uid://cvey3r3312sfd" path="res://resources/theme.tres" id="2_2ffcj"]
 
 [node name="UserInterface" type="Control"]
 layout_mode = 3
@@ -12,15 +13,30 @@ grow_vertical = 2
 script = ExtResource("1_w57q7")
 
 [node name="TopBarHBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 0
-offset_right = 40.0
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -32.5
+offset_right = 32.5
 offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_constants/separation = 20
 
 [node name="NoteGroupSelectionHBoxContainer" type="HBoxContainer" parent="TopBarHBoxContainer"]
 layout_mode = 2
+theme = ExtResource("2_2ffcj")
+
+[node name="RootNoteLabel" type="Label" parent="TopBarHBoxContainer/NoteGroupSelectionHBoxContainer"]
+layout_mode = 2
+text = "Root"
 
 [node name="RootNoteOptionButton" type="MenuButton" parent="TopBarHBoxContainer/NoteGroupSelectionHBoxContainer"]
 layout_mode = 2
+
+[node name="NoteGroupLabel" type="Label" parent="TopBarHBoxContainer/NoteGroupSelectionHBoxContainer"]
+layout_mode = 2
+text = "Note Group"
 
 [node name="NoteGroupOptionButton" type="MenuButton" parent="TopBarHBoxContainer/NoteGroupSelectionHBoxContainer"]
 layout_mode = 2
@@ -29,5 +45,30 @@ layout_mode = 2
 layout_mode = 2
 toggle_mode = true
 text = "Play"
+
+[node name="BpmHBoxContainer" type="HBoxContainer" parent="TopBarHBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_2ffcj")
+
+[node name="BpmLabel" type="Label" parent="TopBarHBoxContainer/BpmHBoxContainer"]
+layout_mode = 2
+text = "BPM"
+
+[node name="BpmVSlider" type="SpinBox" parent="TopBarHBoxContainer/BpmHBoxContainer"]
+layout_mode = 2
+
+[node name="OctaveRangeHBoxContainer" type="HBoxContainer" parent="TopBarHBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_2ffcj")
+
+[node name="OctaveRangeLabel" type="Label" parent="TopBarHBoxContainer/OctaveRangeHBoxContainer"]
+layout_mode = 2
+text = "Octave Range"
+
+[node name="MinOctaveSpinBox" type="SpinBox" parent="TopBarHBoxContainer/OctaveRangeHBoxContainer"]
+layout_mode = 2
+
+[node name="MaxOctaveSpinBox" type="SpinBox" parent="TopBarHBoxContainer/OctaveRangeHBoxContainer"]
+layout_mode = 2
 
 [connection signal="toggled" from="TopBarHBoxContainer/PlayButton" to="." method="_on_play_button_toggled"]
