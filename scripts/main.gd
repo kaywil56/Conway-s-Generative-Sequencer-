@@ -49,6 +49,7 @@ func center_camera():
 func connect_signals() -> void:
 	ui.connect("note_group_selected", Callable(self, "handle_note_group_selected"))
 	ui.connect("play", Callable(self, "handle_play"))
+	ui.connect("bpm_selected", Callable(self, "handle_bpm_selected"))
 
 func handle_play(is_playing) -> void:
 	if is_playing:
@@ -59,6 +60,10 @@ func handle_play(is_playing) -> void:
 		game_of_life.random_seed()
 		var cells = game_of_life.get_cells()
 		draw_grid(cells)
+
+func handle_bpm_selected(bpm):
+	ui.set_play_button(false)
+	timer.wait_time = (60 / bpm)
 
 func handle_note_group_selected(root, note_groups) -> void:
 	var notes_in_group = scale_manager.get_notes_in_group(root, note_groups)

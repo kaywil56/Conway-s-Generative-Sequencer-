@@ -1,6 +1,7 @@
 extends Control
 signal note_group_selected(root, note_group)
 signal play(toggled)
+signal bpm_selected(bpm)
 
 @onready var root_note_option_button = $TopBarHBoxContainer/NoteGroupSelectionHBoxContainer/RootNoteOptionButton
 @onready var note_group_option_button = $TopBarHBoxContainer/NoteGroupSelectionHBoxContainer/NoteGroupOptionButton
@@ -49,3 +50,9 @@ func _on_play_button_toggled(toggled_on: bool) -> void:
 		play_button.text = "Play"
 	
 	emit_signal("play", toggled_on)
+
+func _on_bpm_spin_box_value_changed(value: float) -> void:
+	emit_signal("bpm_selected", value)
+
+func set_play_button(pressed: bool) -> void:
+	play_button.set_pressed(pressed)

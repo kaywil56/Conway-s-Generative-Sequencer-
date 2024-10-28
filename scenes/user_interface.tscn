@@ -54,8 +54,11 @@ theme = ExtResource("2_2ffcj")
 layout_mode = 2
 text = "BPM"
 
-[node name="BpmVSlider" type="SpinBox" parent="TopBarHBoxContainer/BpmHBoxContainer"]
+[node name="BpmSpinBox" type="SpinBox" parent="TopBarHBoxContainer/BpmHBoxContainer"]
 layout_mode = 2
+min_value = 60.0
+max_value = 180.0
+value = 120.0
 
 [node name="OctaveRangeHBoxContainer" type="HBoxContainer" parent="TopBarHBoxContainer"]
 layout_mode = 2
@@ -72,3 +75,4 @@ layout_mode = 2
 layout_mode = 2
 
 [connection signal="toggled" from="TopBarHBoxContainer/PlayButton" to="." method="_on_play_button_toggled"]
+[connection signal="value_changed" from="TopBarHBoxContainer/BpmHBoxContainer/BpmSpinBox" to="." method="_on_bpm_spin_box_value_changed"]
