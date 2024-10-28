@@ -4,7 +4,8 @@ class_name ScaleManager
 const NoteGroups = {
 	"Minor (Aeolian)": [0, 2, 3, 5, 7, 8, 10],
 	"Major": [0, 2, 4, 5, 7, 9, 11],
-	"Minor 7th": [0, 3, 7, 10]
+	"Minor 7th": [0, 3, 7, 10],
+	"Minor": [0, 3, 7]
 }
 const Notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 

@@ -1,8 +1,10 @@
 extends Control
 signal note_group_selected(root, note_group)
+signal play(toggled)
 
-@onready var root_note_option_button = $NoteGroupSelectionHBoxContainer/RootNoteOptionButton
-@onready var note_group_option_button = $NoteGroupSelectionHBoxContainer/NoteGroupOptionButton
+@onready var root_note_option_button = $TopBarHBoxContainer/NoteGroupSelectionHBoxContainer/RootNoteOptionButton
+@onready var note_group_option_button = $TopBarHBoxContainer/NoteGroupSelectionHBoxContainer/NoteGroupOptionButton
+@onready var play_button = $TopBarHBoxContainer/PlayButton
 
 func _ready() -> void:
 	connect_signals()
@@ -38,3 +40,11 @@ func _on_root_selected(id):
 	var selected_item = popup.get_item_text(id)
 	root_note_option_button.text = selected_item
 	emit_signal("note_group_selected", selected_item, note_group_option_button.text)
+
+func _on_play_button_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		play_button.text = "Stop"
+	else:
+		play_button.text = "Play"
+	
+	emit_signal("play", toggled_on)

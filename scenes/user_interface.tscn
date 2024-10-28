@@ -11,18 +11,23 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_w57q7")
 
-[node name="NoteGroupSelectionHBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -34.0
-offset_right = 34.0
+[node name="TopBarHBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
 offset_bottom = 40.0
-grow_horizontal = 2
 
-[node name="RootNoteOptionButton" type="MenuButton" parent="NoteGroupSelectionHBoxContainer"]
+[node name="NoteGroupSelectionHBoxContainer" type="HBoxContainer" parent="TopBarHBoxContainer"]
 layout_mode = 2
 
-[node name="NoteGroupOptionButton" type="MenuButton" parent="NoteGroupSelectionHBoxContainer"]
+[node name="RootNoteOptionButton" type="MenuButton" parent="TopBarHBoxContainer/NoteGroupSelectionHBoxContainer"]
 layout_mode = 2
+
+[node name="NoteGroupOptionButton" type="MenuButton" parent="TopBarHBoxContainer/NoteGroupSelectionHBoxContainer"]
+layout_mode = 2
+
+[node name="PlayButton" type="Button" parent="TopBarHBoxContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "Play"
+
+[connection signal="toggled" from="TopBarHBoxContainer/PlayButton" to="." method="_on_play_button_toggled"]
