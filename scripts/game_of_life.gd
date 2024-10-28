@@ -4,23 +4,32 @@ class_name GameOfLife
 var cells: Dictionary
 var grid_width: int
 var grid_height: int
+var patterns: Dictionary
+var selected_pattern: SeedPattern
 
 func _init(new_grid_width, new_grid_height) -> void:
 	cells = {}
+	patterns = {}
 	grid_width = new_grid_width
 	grid_height = new_grid_height
+	initialize_patterns()
 
-func random_seed() -> void:
-	var rng = RandomNumberGenerator.new()
-	rng.randomize()
-	var probability = 10
-	for x in range(0, grid_width):
-		for y in range(0, grid_height):
-			var random = rng.randi_range(0, 100)
-			if random <= probability: 
-				cells[Vector2i(x, y)] = 1
-			else:
-				cells[Vector2i(x, y)] = 0
+func initialize_patterns() -> void:
+	patterns = {
+		"random": RandomPattern.new(grid_width, grid_height),
+		"blinker": BlinkerPattern.new(grid_width, grid_height)
+	}
+	
+func set_pattern(pattern_name: String) -> void:
+	if patterns.has(pattern_name):
+		selected_pattern = patterns[pattern_name]
+		
+func generate_pattern() -> void:
+	if selected_pattern:
+		cells = selected_pattern.generate()
+
+func get_pattern_names() -> Array:
+	return patterns.keys()
 
 func get_neighbors(cell: Vector2i) -> int:
 	var total = 0 

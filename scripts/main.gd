@@ -25,11 +25,13 @@ var midi: Midi
 func _ready() -> void:
 	midi = Midi.new()
 	game_of_life = GameOfLife.new(GridWidth, GridHeight)
+	var pattern_names = game_of_life.get_pattern_names()
+	game_of_life.set_pattern(pattern_names[0])
+	game_of_life.generate_pattern()
 	midi.prepare_midi()
 	connect_signals()
 	scale_manager = ScaleManager.new()
 	note_manager = NoteManager.new(self, tile_map_layer)
-	game_of_life.random_seed()
 	var cells = game_of_life.get_cells()
 	draw_grid(cells)
 	center_camera()
@@ -38,6 +40,7 @@ func _ready() -> void:
 	var note_groups = scale_manager.get_note_groups()
 	ui.init_root_select_menu(notes)
 	ui.init_note_group_menu(note_groups)
+	ui.init_seed_select_menu(pattern_names)
 	note_manager.add_notes()
 	var notes_in_group = scale_manager.get_notes_in_group(notes[0], note_group_names[0])
 	note_manager.set_notes(notes_in_group)
@@ -50,6 +53,13 @@ func connect_signals() -> void:
 	ui.connect("note_group_selected", Callable(self, "handle_note_group_selected"))
 	ui.connect("play", Callable(self, "handle_play"))
 	ui.connect("bpm_selected", Callable(self, "handle_bpm_selected"))
+	ui.connect("seed_selected", Callable(self, "handle_seed_selected"))
+
+func handle_seed_selected(seed: String) -> void:
+	game_of_life.set_pattern(seed)
+	game_of_life.generate_pattern()
+	var cells = game_of_life.get_cells()
+	draw_grid(cells)
 
 func handle_play(is_playing) -> void:
 	if is_playing:
@@ -57,7 +67,7 @@ func handle_play(is_playing) -> void:
 	else:
 		timer.stop()
 		game_of_life.clear_cells()
-		game_of_life.random_seed()
+		game_of_life.generate_pattern()
 		var cells = game_of_life.get_cells()
 		draw_grid(cells)
 

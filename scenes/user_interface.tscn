@@ -74,5 +74,15 @@ layout_mode = 2
 [node name="MaxOctaveSpinBox" type="SpinBox" parent="TopBarHBoxContainer/OctaveRangeHBoxContainer"]
 layout_mode = 2
 
+[node name="SeedSelectHBoxContainer" type="HBoxContainer" parent="TopBarHBoxContainer"]
+layout_mode = 2
+
+[node name="SeedSelectLabel" type="Label" parent="TopBarHBoxContainer/SeedSelectHBoxContainer"]
+layout_mode = 2
+text = "Seed"
+
+[node name="SeedSelectMenuButton" type="MenuButton" parent="TopBarHBoxContainer/SeedSelectHBoxContainer"]
+layout_mode = 2
+
 [connection signal="toggled" from="TopBarHBoxContainer/PlayButton" to="." method="_on_play_button_toggled"]
 [connection signal="value_changed" from="TopBarHBoxContainer/BpmHBoxContainer/BpmSpinBox" to="." method="_on_bpm_spin_box_value_changed"]
