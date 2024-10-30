@@ -61,11 +61,11 @@ func get_notes() -> Array:
 func get_note_group_names() -> Array:
 	var chords = NoteGroups["chords"].keys()
 	var scales = NoteGroups["scales"].keys()
-	chords += scales
-	return chords
+	scales += chords
+	return scales
 
 func get_note_groups() -> Dictionary:
-	return  NoteGroups
+	return NoteGroups
 	
 func get_category(group) -> String:
 	for i in NoteGroups:

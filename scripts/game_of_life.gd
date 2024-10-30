@@ -16,8 +16,9 @@ func _init(new_grid_width, new_grid_height) -> void:
 
 func initialize_patterns() -> void:
 	patterns = {
-		"random": RandomPattern.new(grid_width, grid_height),
-		"blinker": BlinkerPattern.new(grid_width, grid_height)
+		"Random": RandomPattern.new(grid_width, grid_height),
+		"Blinker": BlinkerPattern.new(grid_width, grid_height),
+		"Glider": GliderPattern.new(grid_width, grid_height)
 	}
 	
 func set_pattern(pattern_name: String) -> void:

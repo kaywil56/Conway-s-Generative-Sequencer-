@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b4rv4ppm3s35o"]
 
-[ext_resource type="Script" path="res://scenes/note.gd" id="1_6sguk"]
+[ext_resource type="Script" path="res://scripts/note.gd" id="1_6sguk"]
 
 [node name="Note" type="Node2D"]
 script = ExtResource("1_6sguk")
@@ -17,5 +17,6 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.909804, 0.941176, 0.972549, 1)
 horizontal_alignment = 1
 vertical_alignment = 1

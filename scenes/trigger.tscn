@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://braydm2ds2eb8"]
+
+[ext_resource type="Texture2D" uid="uid://r688b5cqeb84" path="res://assets/trigger.png" id="1_tvd2q"]
+
+[sub_resource type="GDScript" id="GDScript_hd637"]
+script/source = "extends Sprite2D
+"
+
+[node name="Trigger" type="Sprite2D"]
+texture = ExtResource("1_tvd2q")
+script = SubResource("GDScript_hd637")

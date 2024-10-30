@@ -1,5 +1,6 @@
 extends Control
 signal note_group_selected(root, note_group)
+signal octave_changed(octave)
 signal play(toggled)
 signal bpm_selected(bpm)
 signal seed_selected(seed)
@@ -8,9 +9,13 @@ signal seed_selected(seed)
 @onready var note_group_option_button = $TopBarHBoxContainer/NoteGroupSelectionHBoxContainer/NoteGroupOptionButton
 @onready var play_button = $TopBarHBoxContainer/PlayButton
 @onready var seed_select_menu_button = $TopBarHBoxContainer/SeedSelectHBoxContainer/SeedSelectMenuButton
+@onready var octave_spinbox  = $TopBarHBoxContainer/OctaveRangeHBoxContainer/OctaveSpinBox
 
 func _ready() -> void:
 	connect_signals()
+	
+func set_octave(octave: int) -> void:
+	octave_spinbox.value = octave
 
 func init_note_group_menu(note_groups: Dictionary) -> void:
 	var popup = note_group_option_button.get_popup()
@@ -73,3 +78,6 @@ func _on_bpm_spin_box_value_changed(value: float) -> void:
 
 func set_play_button(pressed: bool) -> void:
 	play_button.set_pressed(pressed)
+
+func _on_octave_spin_box_value_changed(value: float) -> void:
+	emit_signal("octave_changed", value)
