@@ -21,6 +21,7 @@ var note_manager: NoteManager
 var trigger_manager: TriggerManager
 var game_of_life: GameOfLife
 var midi: Midi
+var midi_buffer: Array
 
 @onready var tile_map_layer = $TileMapLayer
 @onready var camera = $Camera2D
@@ -29,21 +30,22 @@ var midi: Midi
 
 func _ready() -> void:
 	game_of_life = GameOfLife.new(GridWidth, GridHeight)
-	midi = Midi.new()
-	trigger_manager = TriggerManager.new(GridWidth, GridHeight)
-	scale_manager = ScaleManager.new()
-	note_manager = NoteManager.new(self, tile_map_layer)
 
 	var pattern_names = game_of_life.get_pattern_names()
 	game_of_life.set_pattern(pattern_names[0])
 	game_of_life.generate_pattern()
 	var cells = game_of_life.get_cells()
+	draw_grid(cells)
+	
+	midi = Midi.new()
+	trigger_manager = TriggerManager.new(tile_map_layer, self)
+	scale_manager = ScaleManager.new()
+	note_manager = NoteManager.new(self, tile_map_layer)
 
 	midi.prepare_midi()
 	trigger_manager.add_triggers()
 	trigger_manager.set_trigger_positions()
 	
-	draw_grid(cells)
 	note_manager.add_notes(GridHeight)
 	var notes = scale_manager.get_notes()
 	var note_group_names = scale_manager.get_note_group_names()
@@ -52,6 +54,7 @@ func _ready() -> void:
 	note_manager.set_note_group(notes_in_group)
 	note_manager.set_octave(4)
 	note_manager.set_notes()
+	note_manager.set_sliders_max()
 	
 	ui.init_root_select_menu(notes)
 	ui.init_note_group_menu(note_groups)
@@ -87,6 +90,7 @@ func handle_play(is_playing) -> void:
 		timer.start()
 	else:
 		timer.stop()
+		play_note_off()
 		game_of_life.clear_cells()
 		game_of_life.generate_pattern()
 		var cells = game_of_life.get_cells()
@@ -105,22 +109,67 @@ func handle_note_group_selected(root, note_groups) -> void:
 func _on_timer_timeout() -> void:
 	var cells = game_of_life.get_cells()
 	draw_grid(cells)
+	trigger_manager.move_triggers()
 	play_notes(cells)
 	game_of_life.next_gen()
-	trigger_manager.move_triggers()
 
 func play_notes(cells):
+	play_note_off()
 	for cell in cells:
-		var atlaas_coords = tile_map_layer.get_cell_atlas_coords(cell)
-		if atlaas_coords == TileAtlasCoordinates[TileType.ALIVE_TRIGGER]:
+		var trigger_at_position = trigger_manager.is_trigger_at_position(cell)
+		if trigger_at_position and cells[cell]:
+			trigger_at_position.animate()
 			var note_node = note_manager.get_note_by_row(cell.y)
-			var note_value = note_node.get_label()
-			var note_number = scale_manager.note_to_midi_number(note_value)
-			midi.play_note(note_number)
+			var rng = RandomNumberGenerator.new()
+			rng.randomize()
+			var random = rng.randi_range(0, 10)
+			var slider_value = note_node.get_slider()
+			if slider_value == 0:
+				return
+			if random <= slider_value:
+				var note_value = note_node.get_label()
+				var note_number = scale_manager.note_to_midi_number(note_value)
+				var message = PackedByteArray()
+				message.append(0x90)
+				message.append(note_number)
+				message.append(100)
+				midi.play_note(message)
+				midi_buffer.append(note_number)
+
+func play_note_off() -> void:
+	for note in midi_buffer:
+		var message = PackedByteArray()
+		message.append(0x80)
+		message.append(note)
+		message.append(0)
+		midi.play_note(message)
+	midi_buffer.clear()
 
 func draw_grid(cells) -> void:
 	for position in cells:
-		var trigger_at_position = trigger_manager.is_trigger_at_position(position)
-		var alive_tile = TileAtlasCoordinates[TileType.ALIVE_TRIGGER] if trigger_at_position else TileAtlasCoordinates[TileType.ALIVE]
-		var dead_tile = TileAtlasCoordinates[TileType.DEAD_TRIGGER] if trigger_at_position else TileAtlasCoordinates[TileType.DEAD]
-		tile_map_layer.set_cell(position, 0, alive_tile if cells[position] else dead_tile)
+		tile_map_layer.set_cell(position, 0, TileAtlasCoordinates[TileType.ALIVE] if cells[position] else TileAtlasCoordinates[TileType.DEAD])
+
+func get_snapped_position() -> Vector2i:
+	var mouse_position = get_global_mouse_position()
+	return tile_map_layer.local_to_map(mouse_position)
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("left_click"):
+		var snapped_position = get_snapped_position()
+		var within_grid = is_within_grid(snapped_position)
+		if not within_grid:
+			return
+		game_of_life.add_cell(snapped_position)
+		var cells = game_of_life.get_cells()
+		draw_grid(cells)
+	if event.is_action_pressed("right_click"):
+		var snapped_position = get_snapped_position()
+		var within_grid = is_within_grid(snapped_position)
+		if not within_grid:
+			return
+		game_of_life.remove_cell(snapped_position)
+		var cells = game_of_life.get_cells()
+		draw_grid(cells)
+
+func is_within_grid(pos: Vector2) -> bool:
+	return pos.x >= 0 and pos.x < GridWidth and pos.y >= 0 and pos.y < GridHeight

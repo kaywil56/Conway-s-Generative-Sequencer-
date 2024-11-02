@@ -62,3 +62,9 @@ func get_cells() -> Dictionary:
 
 func clear_cells() -> void:
 	cells.clear()
+	
+func add_cell(position: Vector2i) -> void:
+	cells[position] = 1
+	
+func remove_cell(position: Vector2i) -> void:
+	cells[position] = 0

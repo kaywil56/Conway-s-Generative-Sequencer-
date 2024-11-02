@@ -9,9 +9,5 @@ func _init() -> void:
 func prepare_midi():
 	out.open_port(2)
 
-func play_note(note):
-	var message = PackedByteArray()
-	message.append(0x90) # Note on
-	message.append(note) # Note number
-	message.append(127) # Velocity
+func play_note(message):
 	out.send_message(message)

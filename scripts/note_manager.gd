@@ -49,3 +49,15 @@ func get_note_by_row(y: int) -> Node2D:
 		return note_instances[y]
 	else:
 		return null
+
+func set_sliders_max() -> void:
+	for note in note_instances:
+		note_instances[note].set_slider(10)
+
+func set_sliders_random() -> void:
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
+	for note in note_instances:
+		var random = rng.randi_range(0, 10)
+		note_instances[note].set_slider(random)
+		

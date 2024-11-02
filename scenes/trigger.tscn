@@ -1,11 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://braydm2ds2eb8"]
+[gd_scene load_steps=4 format=3 uid="uid://braydm2ds2eb8"]
 
-[ext_resource type="Texture2D" uid="uid://r688b5cqeb84" path="res://assets/trigger.png" id="1_tvd2q"]
+[ext_resource type="Texture2D" uid="uid://72pg2x6odg4g" path="res://assets/border.png" id="1_2sjjj"]
+[ext_resource type="Script" path="res://scripts/trigger.gd" id="1_65fln"]
+[ext_resource type="Texture2D" uid="uid://b2lb6333td5sr" path="res://assets/fill.png" id="2_ktrm8"]
 
-[sub_resource type="GDScript" id="GDScript_hd637"]
-script/source = "extends Sprite2D
-"
+[node name="Trigger" type="Node2D"]
+script = ExtResource("1_65fln")
 
-[node name="Trigger" type="Sprite2D"]
-texture = ExtResource("1_tvd2q")
-script = SubResource("GDScript_hd637")
+[node name="BorderSprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_2sjjj")
+
+[node name="FillSprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("2_ktrm8")
