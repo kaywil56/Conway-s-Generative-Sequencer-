@@ -1,8 +1,8 @@
 extends SeedPattern
 class_name BlinkerPattern
 
-func generate() -> Dictionary:
-	var cells = _create_empty_grid()
+func generate(grid_width: int, grid_height: int) -> Dictionary:
+	var cells = _create_empty_grid(grid_width, grid_height)
 	var pattern = [
 		Vector2i(0, 0),
 		Vector2i(1, 0),

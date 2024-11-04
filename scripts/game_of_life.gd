@@ -16,9 +16,10 @@ func _init(new_grid_width, new_grid_height) -> void:
 
 func initialize_patterns() -> void:
 	patterns = {
-		"Random": RandomPattern.new(grid_width, grid_height),
-		"Blinker": BlinkerPattern.new(grid_width, grid_height),
-		"Glider": GliderPattern.new(grid_width, grid_height)
+		"Blank": BlankPattern.new(),
+		"Random": RandomPattern.new(),
+		"Blinker": BlinkerPattern.new(),
+		"Glider": GliderPattern.new()
 	}
 	
 func set_pattern(pattern_name: String) -> void:
@@ -27,7 +28,7 @@ func set_pattern(pattern_name: String) -> void:
 		
 func generate_pattern() -> void:
 	if selected_pattern:
-		cells = selected_pattern.generate()
+		cells = selected_pattern.generate(grid_width, grid_height)
 
 func get_pattern_names() -> Array:
 	return patterns.keys()
@@ -68,3 +69,9 @@ func add_cell(position: Vector2i) -> void:
 	
 func remove_cell(position: Vector2i) -> void:
 	cells[position] = 0
+
+func set_grid_height(height: int) -> void:
+	grid_height = height
+
+func set_grid_width(width: int) -> void:
+	grid_width = width

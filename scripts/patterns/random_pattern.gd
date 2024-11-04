@@ -1,7 +1,7 @@
 extends SeedPattern
 class_name RandomPattern
 
-func generate() -> Dictionary:
+func generate(grid_width: int, grid_height: int) -> Dictionary:
 	var cells = {}
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()

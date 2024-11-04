@@ -15,6 +15,7 @@ const TileAtlasCoordinates = {
 }
 const GridWidth = 16
 const GridHeight = 14
+const Bar = 4
 
 var scale_manager: ScaleManager
 var note_manager: NoteManager
@@ -22,6 +23,7 @@ var trigger_manager: TriggerManager
 var game_of_life: GameOfLife
 var midi: Midi
 var midi_buffer: Array
+var bpm: int
 
 @onready var tile_map_layer = $TileMapLayer
 @onready var camera = $Camera2D
@@ -29,6 +31,7 @@ var midi_buffer: Array
 @onready var timer = $Timer
 
 func _ready() -> void:
+	bpm = 120
 	game_of_life = GameOfLife.new(GridWidth, GridHeight)
 
 	var pattern_names = game_of_life.get_pattern_names()
@@ -38,21 +41,21 @@ func _ready() -> void:
 	draw_grid(cells)
 	
 	midi = Midi.new()
-	trigger_manager = TriggerManager.new(tile_map_layer, self)
+	trigger_manager = TriggerManager.new(tile_map_layer, self, GridHeight, GridWidth)
 	scale_manager = ScaleManager.new()
-	note_manager = NoteManager.new(self, tile_map_layer)
+	note_manager = NoteManager.new(self, tile_map_layer, 2)
 
 	midi.prepare_midi()
+
 	trigger_manager.add_triggers()
 	trigger_manager.set_trigger_positions()
-	
-	note_manager.add_notes(GridHeight)
 	var notes = scale_manager.get_notes()
 	var note_group_names = scale_manager.get_note_group_names()
 	var note_groups = scale_manager.get_note_groups()
 	var notes_in_group = scale_manager.get_notes_in_group(notes[0], note_group_names[0])
 	note_manager.set_note_group(notes_in_group)
 	note_manager.set_octave(4)
+	note_manager.add_notes()
 	note_manager.set_notes()
 	note_manager.set_sliders_max()
 	
@@ -74,10 +77,46 @@ func connect_signals() -> void:
 	ui.connect("bpm_selected", Callable(self, "handle_bpm_selected"))
 	ui.connect("seed_selected", Callable(self, "handle_seed_selected"))
 	ui.connect("octave_changed", Callable(self, "handle_octave_selected"))
+	ui.connect("randomize_probability", Callable(self, "handle_randomize_probability"))
+	ui.connect("grid_width_selected", Callable(self, "handle_grid_width_selected"))
+	ui.connect("grid_height_selected", Callable(self, "handle_grid_height_selected"))
+
+func handle_grid_height_selected(height: String) -> void:
+	var height_value = height.left(1)
+	height_value = int(height_value) * note_manager.get_note_group().size()
+	game_of_life.set_grid_height(height_value)
+	game_of_life.generate_pattern()
+	var cells = game_of_life.get_cells()
+	draw_grid(cells)
+	trigger_manager.set_grid_height(height_value)
+	trigger_manager.clear_triggers()
+	trigger_manager.add_triggers()
+	trigger_manager.set_trigger_positions()
+	
+	note_manager.set_grid_height_multi(int(height.left(1)))
+	note_manager.clear_notes()
+	note_manager.add_notes()
+	note_manager.set_notes()
+	
+func handle_grid_width_selected(width: String) -> void:
+	var width_value = width.replace("BAR(S)","")
+	width_value = Bar * int(width_value)
+	print(width_value)
+	game_of_life.set_grid_width(width_value)
+	game_of_life.generate_pattern()
+	var cells = game_of_life.get_cells()
+	draw_grid(cells)
+	trigger_manager.set_grid_width(width_value)
+	trigger_manager.clear_triggers()
+	trigger_manager.add_triggers()
+	trigger_manager.set_trigger_positions()
 
 func handle_octave_selected(octave: int) -> void:
 	note_manager.set_octave(octave)
 	note_manager.set_notes()
+	
+func handle_randomize_probability() -> void:
+	note_manager.set_sliders_random()
 
 func handle_seed_selected(seed: String) -> void:
 	game_of_life.set_pattern(seed)
@@ -97,16 +136,22 @@ func handle_play(is_playing) -> void:
 		trigger_manager.set_trigger_positions()
 		draw_grid(cells)
 
-func handle_bpm_selected(bpm):
-	ui.set_play_button(false)
-	timer.wait_time = (60 / bpm) / 2
+func handle_bpm_selected(new_bpm):
+	bpm = new_bpm
+	timer.wait_time = 60 / bpm
 
 func handle_note_group_selected(root, note_groups) -> void:
 	var notes_in_group = scale_manager.get_notes_in_group(root, note_groups)
 	note_manager.set_note_group(notes_in_group)
-	note_manager.set_notes()
+	var grid_height_value = ui.get_grid_height()
+	handle_grid_height_selected(grid_height_value)
 	
 func _on_timer_timeout() -> void:
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
+	var max_offset = (60 / bpm) / 4
+	var base = (60 /  bpm)
+	timer.wait_time = base + rng.randf_range(-max_offset, max_offset)
 	var cells = game_of_life.get_cells()
 	draw_grid(cells)
 	trigger_manager.move_triggers()
@@ -118,7 +163,6 @@ func play_notes(cells):
 	for cell in cells:
 		var trigger_at_position = trigger_manager.is_trigger_at_position(cell)
 		if trigger_at_position and cells[cell]:
-			trigger_at_position.animate()
 			var note_node = note_manager.get_note_by_row(cell.y)
 			var rng = RandomNumberGenerator.new()
 			rng.randomize()
@@ -134,6 +178,7 @@ func play_notes(cells):
 				message.append(note_number)
 				message.append(100)
 				midi.play_note(message)
+				trigger_at_position.animate()
 				midi_buffer.append(note_number)
 
 func play_note_off() -> void:
@@ -146,6 +191,7 @@ func play_note_off() -> void:
 	midi_buffer.clear()
 
 func draw_grid(cells) -> void:
+	tile_map_layer.clear()
 	for position in cells:
 		tile_map_layer.set_cell(position, 0, TileAtlasCoordinates[TileType.ALIVE] if cells[position] else TileAtlasCoordinates[TileType.DEAD])
 

@@ -4,18 +4,42 @@ signal octave_changed(octave)
 signal play(toggled)
 signal bpm_selected(bpm)
 signal seed_selected(seed)
+signal randomize_probability
+signal grid_width_selected(width)
+signal grid_height_selected(height)
 
 @onready var root_note_option_button = $TopBarHBoxContainer/NoteGroupSelectionHBoxContainer/RootNoteOptionButton
 @onready var note_group_option_button = $TopBarHBoxContainer/NoteGroupSelectionHBoxContainer/NoteGroupOptionButton
 @onready var play_button = $TopBarHBoxContainer/PlayButton
 @onready var seed_select_menu_button = $TopBarHBoxContainer/SeedSelectHBoxContainer/SeedSelectMenuButton
 @onready var octave_spinbox  = $TopBarHBoxContainer/OctaveRangeHBoxContainer/OctaveSpinBox
+@onready var bpm_spinbox = $TopBarHBoxContainer/BpmHBoxContainer/BpmSpinBox
+@onready var grid_width_option = $TopBarHBoxContainer/GridSizeHBoxContainer/GridWidthOptionButton
+@onready var grid_height_option = $TopBarHBoxContainer/GridSizeHBoxContainer/GridHeightOptionButton
 
 func _ready() -> void:
 	connect_signals()
+	init_grid_width_menu()
+	init_grid_height_menu()
 	
 func set_octave(octave: int) -> void:
 	octave_spinbox.value = octave
+	
+func init_grid_width_menu() -> void:
+	var popup = grid_width_option.get_popup()
+	var widths = [1, 2, 4, 8, 16, 32, 64]
+	for i in widths:
+		var value = str(i) + "BAR(S)"
+		popup.add_item(value)
+	grid_width_option.text = popup.get_item_text(2)
+
+func init_grid_height_menu() -> void:
+	var popup = grid_height_option.get_popup()
+	for i in range(1, 5):
+		var value = str(i) + "x"
+		popup.add_item(value)
+	var popup_item_text = popup.get_item_text(1)
+	grid_height_option.text = popup_item_text
 
 func init_note_group_menu(note_groups: Dictionary) -> void:
 	var popup = note_group_option_button.get_popup()
@@ -46,6 +70,12 @@ func connect_signals():
 	
 	popup = seed_select_menu_button.get_popup()
 	popup.id_pressed.connect(Callable(self, "_on_seed_selected"))
+	
+	popup = grid_width_option.get_popup()
+	popup.id_pressed.connect(Callable(self, "_on_grid_width_selected"))
+	
+	popup = grid_height_option.get_popup()
+	popup.id_pressed.connect(Callable(self, "_on_grid_height_selected"))
 
 func _on_note_group_selected(id):
 	var popup = note_group_option_button.get_popup()
@@ -81,3 +111,21 @@ func set_play_button(pressed: bool) -> void:
 
 func _on_octave_spin_box_value_changed(value: float) -> void:
 	emit_signal("octave_changed", value)
+
+func _on_randomize_probability_button_pressed() -> void:
+	emit_signal("randomize_probability")
+
+func _on_grid_width_selected(id: int) -> void:
+	var popup = grid_width_option.get_popup()
+	var selected_item = popup.get_item_text(id)
+	grid_width_option.text = selected_item
+	emit_signal("grid_width_selected", selected_item)
+	
+func _on_grid_height_selected(id: int) -> void:
+	var popup = grid_height_option.get_popup()
+	var selected_item = popup.get_item_text(id)
+	grid_height_option.text = selected_item
+	emit_signal("grid_height_selected", selected_item)
+
+func get_grid_height() -> String:
+	return grid_height_option.text

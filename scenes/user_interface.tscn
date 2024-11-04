@@ -82,6 +82,35 @@ text = "Seed"
 [node name="SeedSelectMenuButton" type="MenuButton" parent="TopBarHBoxContainer/SeedSelectHBoxContainer"]
 layout_mode = 2
 
+[node name="GridSizeHBoxContainer" type="HBoxContainer" parent="TopBarHBoxContainer"]
+layout_mode = 2
+
+[node name="GridWidthLabel" type="Label" parent="TopBarHBoxContainer/GridSizeHBoxContainer"]
+layout_mode = 2
+text = "Grid Width"
+
+[node name="GridWidthOptionButton" type="MenuButton" parent="TopBarHBoxContainer/GridSizeHBoxContainer"]
+layout_mode = 2
+
+[node name="GridHeightLabel" type="Label" parent="TopBarHBoxContainer/GridSizeHBoxContainer"]
+layout_mode = 2
+text = "Grid Height"
+
+[node name="GridHeightOptionButton" type="MenuButton" parent="TopBarHBoxContainer/GridSizeHBoxContainer"]
+layout_mode = 2
+
+[node name="RandomizeProbabilityButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -15.5
+offset_right = 95.0
+offset_bottom = 15.5
+grow_vertical = 2
+text = "Randomize"
+
 [connection signal="toggled" from="TopBarHBoxContainer/PlayButton" to="." method="_on_play_button_toggled"]
 [connection signal="value_changed" from="TopBarHBoxContainer/BpmHBoxContainer/BpmSpinBox" to="." method="_on_bpm_spin_box_value_changed"]
 [connection signal="value_changed" from="TopBarHBoxContainer/OctaveRangeHBoxContainer/OctaveSpinBox" to="." method="_on_octave_spin_box_value_changed"]
+[connection signal="pressed" from="RandomizeProbabilityButton" to="." method="_on_randomize_probability_button_pressed"]
