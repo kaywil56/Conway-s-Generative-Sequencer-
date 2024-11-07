@@ -24,14 +24,17 @@ var game_of_life: GameOfLife
 var midi: Midi
 var midi_buffer: Array
 var bpm: int
+var offset: int
 
 @onready var tile_map_layer = $TileMapLayer
 @onready var camera = $Camera2D
 @onready var ui = $CanvasLayer/UserInterface
 @onready var timer = $Timer
+@onready var visibility_notifier = $VisibleOnScreenNotifier2D
 
 func _ready() -> void:
 	bpm = 120
+	offset = 1
 	game_of_life = GameOfLife.new(GridWidth, GridHeight)
 
 	var pattern_names = game_of_life.get_pattern_names()
@@ -68,9 +71,19 @@ func _ready() -> void:
 	center_camera()
 
 func center_camera():
-	var size = Vector2i(GridWidth, GridHeight) * tile_map_layer.tile_set.tile_size
+	var used_rect = tile_map_layer.get_used_rect()
+	var used_rect_size = used_rect.size
+	var tile_size = tile_map_layer.tile_set.tile_size
+	var size = used_rect_size * tile_size
 	camera.set_position(Vector2(size.x / 2, size.y / 2))
-	
+	var viewport_size = get_viewport_rect().size
+	var padding = 1.2
+	var zoom_x = (viewport_size.x / size.x) / padding
+	var zoom_y = (viewport_size.y / size.y) / padding
+	var zoom = min(zoom_x, zoom_y)
+	zoom = clamp(zoom, 0.1, 1.0)
+	camera.zoom = Vector2(zoom, zoom)
+
 func connect_signals() -> void:
 	ui.connect("note_group_selected", Callable(self, "handle_note_group_selected"))
 	ui.connect("play", Callable(self, "handle_play"))
@@ -80,6 +93,16 @@ func connect_signals() -> void:
 	ui.connect("randomize_probability", Callable(self, "handle_randomize_probability"))
 	ui.connect("grid_width_selected", Callable(self, "handle_grid_width_selected"))
 	ui.connect("grid_height_selected", Callable(self, "handle_grid_height_selected"))
+	ui.connect("offset_selected", Callable(self, "handle_offset_selected"))
+
+func handle_offset_selected(value):
+	if value == "None":
+		offset = 1
+		return
+	var new_offset = value.replace("th", "")
+	new_offset = new_offset.replace("/", "")
+	new_offset = new_offset.replace("1", "")
+	offset = int(new_offset)
 
 func handle_grid_height_selected(height: String) -> void:
 	var height_value = height.left(1)
@@ -88,6 +111,7 @@ func handle_grid_height_selected(height: String) -> void:
 	game_of_life.generate_pattern()
 	var cells = game_of_life.get_cells()
 	draw_grid(cells)
+	center_camera()
 	trigger_manager.set_grid_height(height_value)
 	trigger_manager.clear_triggers()
 	trigger_manager.add_triggers()
@@ -97,6 +121,7 @@ func handle_grid_height_selected(height: String) -> void:
 	note_manager.clear_notes()
 	note_manager.add_notes()
 	note_manager.set_notes()
+	note_manager.set_sliders_max()
 	
 func handle_grid_width_selected(width: String) -> void:
 	var width_value = width.replace("BAR(S)","")
@@ -106,6 +131,7 @@ func handle_grid_width_selected(width: String) -> void:
 	game_of_life.generate_pattern()
 	var cells = game_of_life.get_cells()
 	draw_grid(cells)
+	center_camera()
 	trigger_manager.set_grid_width(width_value)
 	trigger_manager.clear_triggers()
 	trigger_manager.add_triggers()
@@ -147,11 +173,16 @@ func handle_note_group_selected(root, note_groups) -> void:
 	handle_grid_height_selected(grid_height_value)
 	
 func _on_timer_timeout() -> void:
-	var rng = RandomNumberGenerator.new()
-	rng.randomize()
-	var max_offset = (60 / bpm) / 4
-	var base = (60 /  bpm)
-	timer.wait_time = base + rng.randf_range(-max_offset, max_offset)
+	var base = (60.0 / bpm)
+	if offset == 1:
+		timer.wait_time = base
+	else:
+		var rng = RandomNumberGenerator.new()
+		rng.randomize()
+		var max_offset: float = (60.0 / bpm) * (4.0 / offset)
+		var base_with_offset = base + rng.randf_range(-max_offset, max_offset)
+		print(base_with_offset)
+		timer.wait_time = base_with_offset
 	var cells = game_of_life.get_cells()
 	draw_grid(cells)
 	trigger_manager.move_triggers()

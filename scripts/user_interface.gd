@@ -7,6 +7,7 @@ signal seed_selected(seed)
 signal randomize_probability
 signal grid_width_selected(width)
 signal grid_height_selected(height)
+signal offset_selected(offset)
 
 @onready var root_note_option_button = $TopBarHBoxContainer/NoteGroupSelectionHBoxContainer/RootNoteOptionButton
 @onready var note_group_option_button = $TopBarHBoxContainer/NoteGroupSelectionHBoxContainer/NoteGroupOptionButton
@@ -16,18 +17,20 @@ signal grid_height_selected(height)
 @onready var bpm_spinbox = $TopBarHBoxContainer/BpmHBoxContainer/BpmSpinBox
 @onready var grid_width_option = $TopBarHBoxContainer/GridSizeHBoxContainer/GridWidthOptionButton
 @onready var grid_height_option = $TopBarHBoxContainer/GridSizeHBoxContainer/GridHeightOptionButton
+@onready var offset_menu_button = $TopBarHBoxContainer/OffsetHBoxContainer/OffsetMenuButton
 
 func _ready() -> void:
 	connect_signals()
 	init_grid_width_menu()
 	init_grid_height_menu()
+	init_offset_menu()
 	
 func set_octave(octave: int) -> void:
 	octave_spinbox.value = octave
 	
 func init_grid_width_menu() -> void:
 	var popup = grid_width_option.get_popup()
-	var widths = [1, 2, 4, 8, 16, 32, 64]
+	var widths = [1, 2, 4, 8, 16]
 	for i in widths:
 		var value = str(i) + "BAR(S)"
 		popup.add_item(value)
@@ -61,6 +64,22 @@ func init_seed_select_menu(seeds: Array) -> void:
 		popup.add_item(seeds[idx], idx)
 	seed_select_menu_button.text = seeds[0]
 
+func init_offset_menu():
+	var popup = offset_menu_button.get_popup()
+	var offsets = [
+		"None",
+		"1/64th",
+		"1/32th",
+		"1/16th",
+		"1/8th",
+		"1/4th",
+		"1/2th",
+	]
+	for offset in offsets:
+		popup.add_item(offset)
+	var popup_item_text = popup.get_item_text(0)
+	offset_menu_button.text = popup_item_text
+
 func connect_signals():
 	var popup = note_group_option_button.get_popup()
 	popup.id_pressed.connect(Callable(self, "_on_note_group_selected"))
@@ -76,6 +95,15 @@ func connect_signals():
 	
 	popup = grid_height_option.get_popup()
 	popup.id_pressed.connect(Callable(self, "_on_grid_height_selected"))
+	
+	popup = offset_menu_button.get_popup()
+	popup.id_pressed.connect(Callable(self, "_on_offset_selected"))
+
+func _on_offset_selected(id):
+	var popup = offset_menu_button.get_popup()
+	var selected_item = popup.get_item_text(id)
+	offset_menu_button.text = selected_item
+	emit_signal("offset_selected", selected_item)
 
 func _on_note_group_selected(id):
 	var popup = note_group_option_button.get_popup()

@@ -99,6 +99,16 @@ text = "Grid Height"
 [node name="GridHeightOptionButton" type="MenuButton" parent="TopBarHBoxContainer/GridSizeHBoxContainer"]
 layout_mode = 2
 
+[node name="OffsetHBoxContainer" type="HBoxContainer" parent="TopBarHBoxContainer"]
+layout_mode = 2
+
+[node name="OffsetLabel" type="Label" parent="TopBarHBoxContainer/OffsetHBoxContainer"]
+layout_mode = 2
+text = "Offset"
+
+[node name="OffsetMenuButton" type="MenuButton" parent="TopBarHBoxContainer/OffsetHBoxContainer"]
+layout_mode = 2
+
 [node name="RandomizeProbabilityButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 4
