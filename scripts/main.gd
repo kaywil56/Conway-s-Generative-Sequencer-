@@ -30,7 +30,6 @@ var offset: int
 @onready var camera = $Camera2D
 @onready var ui = $CanvasLayer/UserInterface
 @onready var timer = $Timer
-@onready var visibility_notifier = $VisibleOnScreenNotifier2D
 
 func _ready() -> void:
 	bpm = 120
@@ -57,7 +56,7 @@ func _ready() -> void:
 	var note_groups = scale_manager.get_note_groups()
 	var notes_in_group = scale_manager.get_notes_in_group(notes[0], note_group_names[0])
 	note_manager.set_note_group(notes_in_group)
-	note_manager.set_octave(4)
+	note_manager.set_octave(4, 6)
 	note_manager.add_notes()
 	note_manager.set_notes()
 	note_manager.set_sliders_max()
@@ -65,7 +64,7 @@ func _ready() -> void:
 	ui.init_root_select_menu(notes)
 	ui.init_note_group_menu(note_groups)
 	ui.init_seed_select_menu(pattern_names)
-	ui.set_octave(4)
+	ui.set_octave(4, 6)
 
 	connect_signals()
 	center_camera()
@@ -77,13 +76,14 @@ func center_camera():
 	var size = used_rect_size * tile_size
 	camera.set_position(Vector2(size.x / 2, size.y / 2))
 	var viewport_size = get_viewport_rect().size
-	var padding = 1.2
+	var padding = 1.5
 	var zoom_x = (viewport_size.x / size.x) / padding
 	var zoom_y = (viewport_size.y / size.y) / padding
 	var zoom = min(zoom_x, zoom_y)
 	zoom = clamp(zoom, 0.1, 1.0)
 	camera.zoom = Vector2(zoom, zoom)
-
+	camera.position.y -= 15
+	
 func connect_signals() -> void:
 	ui.connect("note_group_selected", Callable(self, "handle_note_group_selected"))
 	ui.connect("play", Callable(self, "handle_play"))
@@ -137,8 +137,8 @@ func handle_grid_width_selected(width: String) -> void:
 	trigger_manager.add_triggers()
 	trigger_manager.set_trigger_positions()
 
-func handle_octave_selected(octave: int) -> void:
-	note_manager.set_octave(octave)
+func handle_octave_selected(min_octave: int, max_octave: int) -> void:
+	note_manager.set_octave(min_octave, max_octave)
 	note_manager.set_notes()
 	
 func handle_randomize_probability() -> void:

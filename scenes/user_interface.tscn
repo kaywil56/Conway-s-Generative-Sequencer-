@@ -86,9 +86,21 @@ layout_mode = 2
 layout_mode = 2
 text = "Octave Range"
 
-[node name="OctaveRangeSpinBox" type="SpinBox" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer"]
+[node name="OctaveRangeSpinboxHBoxContainer" type="HBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer"]
 layout_mode = 2
-max_value = 9.0
+
+[node name="MinOctaveRangeSpinBox" type="SpinBox" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer"]
+layout_mode = 2
+min_value = 1.0
+max_value = 10.0
+value = 4.0
+select_all_on_focus = true
+
+[node name="MaxOctaveRangeSpinbox" type="SpinBox" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer"]
+layout_mode = 2
+min_value = 1.0
+max_value = 10.0
+value = 6.0
 
 [node name="SeedSelectHBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
 layout_mode = 2
@@ -133,4 +145,5 @@ layout_mode = 2
 [connection signal="pressed" from="RandomizeProbabilityButton" to="." method="_on_randomize_probability_button_pressed"]
 [connection signal="toggled" from="TopBarVBoxContainer/PlayButton" to="." method="_on_play_button_toggled"]
 [connection signal="value_changed" from="TopBarVBoxContainer/SettingsBarHBoxContainer/BpmVBoxContainer/BpmSpinBox" to="." method="_on_bpm_spin_box_value_changed"]
-[connection signal="value_changed" from="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinBox" to="." method="_on_octave_spin_box_value_changed"]
+[connection signal="value_changed" from="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer/MinOctaveRangeSpinBox" to="." method="_on_min_octave_range_spin_box_value_changed"]
+[connection signal="value_changed" from="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer/MaxOctaveRangeSpinbox" to="." method="_on_max_octave_range_spinbox_value_changed"]

@@ -5,7 +5,8 @@ var parent: Node2D
 var tile_map_layer: TileMapLayer
 var note_scene = preload("res://scenes/note.tscn")
 var note_instances: Dictionary
-var octave: int
+var min_octave: int
+var max_octave: int
 var note_group: Array
 var grid_height_multi: int
 
@@ -27,14 +28,15 @@ func add_notes() -> void:
 func set_note_group(new_note_group: Array) -> void:
 	note_group = new_note_group
 
-func set_octave(new_octave: int) -> void:
-	octave = new_octave
+func set_octave(new_min_octave: int, new_max_octave: int) -> void:
+	min_octave = new_min_octave
+	max_octave = new_max_octave
 
 func get_note_group() -> Array:
 	return note_group
 
 func get_octave() -> int:
-	return octave
+	return min_octave
 
 func _add_note(position: Vector2i) -> void:
 	var global_cell_position = tile_map_layer.map_to_local(position)
@@ -44,11 +46,13 @@ func _add_note(position: Vector2i) -> void:
 	note_instances[position.y] = note_instance
 	
 func set_notes() -> void:
-	var current_octave = octave
+	var current_min_octave = min_octave
 	for i in range(0, note_instances.size()):
-		if i % note_group.size() == 0:
-			current_octave += 1
-		note_instances[i].label.text = str(note_group[i % note_group.size()], current_octave - 1)
+		if i != 0 and i % note_group.size() == 0:
+			current_min_octave += 1
+		if current_min_octave == max_octave + 1:
+			current_min_octave = min_octave
+		note_instances[i].label.text = str(note_group[i % note_group.size()], current_min_octave)
 
 func get_note_by_row(y: int) -> Node2D:
 	if note_instances.has(y):
