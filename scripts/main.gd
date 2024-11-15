@@ -185,9 +185,14 @@ func _on_timer_timeout() -> void:
 		timer.wait_time = base_with_offset
 	var cells = game_of_life.get_cells()
 	draw_grid(cells)
-	trigger_manager.move_triggers()
+	var reached_end = trigger_manager.reached_end()
+	if reached_end:
+		trigger_manager.set_trigger_positions()
+	else:
+		trigger_manager.move_triggers()
 	play_notes(cells)
 	game_of_life.next_gen()
+	
 
 func play_notes(cells):
 	play_note_off()

@@ -10,104 +10,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_2ffcj")
 script = ExtResource("1_w57q7")
-
-[node name="TopBarHBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -32.5
-offset_right = 32.5
-offset_bottom = 40.0
-grow_horizontal = 2
-theme_override_constants/separation = 20
-
-[node name="NoteGroupSelectionHBoxContainer" type="HBoxContainer" parent="TopBarHBoxContainer"]
-layout_mode = 2
-theme = ExtResource("2_2ffcj")
-
-[node name="RootNoteLabel" type="Label" parent="TopBarHBoxContainer/NoteGroupSelectionHBoxContainer"]
-layout_mode = 2
-text = "Root"
-
-[node name="RootNoteOptionButton" type="MenuButton" parent="TopBarHBoxContainer/NoteGroupSelectionHBoxContainer"]
-layout_mode = 2
-
-[node name="NoteGroupLabel" type="Label" parent="TopBarHBoxContainer/NoteGroupSelectionHBoxContainer"]
-layout_mode = 2
-text = "Note Group"
-
-[node name="NoteGroupOptionButton" type="MenuButton" parent="TopBarHBoxContainer/NoteGroupSelectionHBoxContainer"]
-layout_mode = 2
-
-[node name="PlayButton" type="Button" parent="TopBarHBoxContainer"]
-layout_mode = 2
-toggle_mode = true
-text = "Play"
-
-[node name="BpmHBoxContainer" type="HBoxContainer" parent="TopBarHBoxContainer"]
-layout_mode = 2
-theme = ExtResource("2_2ffcj")
-
-[node name="BpmLabel" type="Label" parent="TopBarHBoxContainer/BpmHBoxContainer"]
-layout_mode = 2
-text = "BPM"
-
-[node name="BpmSpinBox" type="SpinBox" parent="TopBarHBoxContainer/BpmHBoxContainer"]
-layout_mode = 2
-min_value = 60.0
-max_value = 180.0
-value = 120.0
-
-[node name="OctaveRangeHBoxContainer" type="HBoxContainer" parent="TopBarHBoxContainer"]
-layout_mode = 2
-theme = ExtResource("2_2ffcj")
-
-[node name="OctaveRangeLabel" type="Label" parent="TopBarHBoxContainer/OctaveRangeHBoxContainer"]
-layout_mode = 2
-text = "Octave Range"
-
-[node name="OctaveSpinBox" type="SpinBox" parent="TopBarHBoxContainer/OctaveRangeHBoxContainer"]
-layout_mode = 2
-max_value = 9.0
-
-[node name="SeedSelectHBoxContainer" type="HBoxContainer" parent="TopBarHBoxContainer"]
-layout_mode = 2
-
-[node name="SeedSelectLabel" type="Label" parent="TopBarHBoxContainer/SeedSelectHBoxContainer"]
-layout_mode = 2
-text = "Seed"
-
-[node name="SeedSelectMenuButton" type="MenuButton" parent="TopBarHBoxContainer/SeedSelectHBoxContainer"]
-layout_mode = 2
-
-[node name="GridSizeHBoxContainer" type="HBoxContainer" parent="TopBarHBoxContainer"]
-layout_mode = 2
-
-[node name="GridWidthLabel" type="Label" parent="TopBarHBoxContainer/GridSizeHBoxContainer"]
-layout_mode = 2
-text = "Grid Width"
-
-[node name="GridWidthOptionButton" type="MenuButton" parent="TopBarHBoxContainer/GridSizeHBoxContainer"]
-layout_mode = 2
-
-[node name="GridHeightLabel" type="Label" parent="TopBarHBoxContainer/GridSizeHBoxContainer"]
-layout_mode = 2
-text = "Grid Height"
-
-[node name="GridHeightOptionButton" type="MenuButton" parent="TopBarHBoxContainer/GridSizeHBoxContainer"]
-layout_mode = 2
-
-[node name="OffsetHBoxContainer" type="HBoxContainer" parent="TopBarHBoxContainer"]
-layout_mode = 2
-
-[node name="OffsetLabel" type="Label" parent="TopBarHBoxContainer/OffsetHBoxContainer"]
-layout_mode = 2
-text = "Offset"
-
-[node name="OffsetMenuButton" type="MenuButton" parent="TopBarHBoxContainer/OffsetHBoxContainer"]
-layout_mode = 2
 
 [node name="RandomizeProbabilityButton" type="Button" parent="."]
 layout_mode = 1
@@ -120,7 +24,113 @@ offset_bottom = 15.5
 grow_vertical = 2
 text = "Randomize"
 
-[connection signal="toggled" from="TopBarHBoxContainer/PlayButton" to="." method="_on_play_button_toggled"]
-[connection signal="value_changed" from="TopBarHBoxContainer/BpmHBoxContainer/BpmSpinBox" to="." method="_on_bpm_spin_box_value_changed"]
-[connection signal="value_changed" from="TopBarHBoxContainer/OctaveRangeHBoxContainer/OctaveSpinBox" to="." method="_on_octave_spin_box_value_changed"]
+[node name="TopBarVBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -331.0
+offset_right = 331.0
+offset_bottom = 48.0
+grow_horizontal = 2
+
+[node name="PlayButton" type="Button" parent="TopBarVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+toggle_mode = true
+text = "Play"
+
+[node name="SettingsBarHBoxContainer" type="HBoxContainer" parent="TopBarVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 20
+
+[node name="RootNoteVBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
+layout_mode = 2
+
+[node name="RootNoteLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/RootNoteVBoxContainer"]
+layout_mode = 2
+text = "Root"
+
+[node name="RootNoteMenuButton" type="MenuButton" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/RootNoteVBoxContainer"]
+layout_mode = 2
+
+[node name="ChordsAndScalesVBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
+layout_mode = 2
+
+[node name="ChordsAndScalesLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/ChordsAndScalesVBoxContainer"]
+layout_mode = 2
+text = "Chords and Scales"
+
+[node name="ChordsAndScalesMenuButton" type="MenuButton" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/ChordsAndScalesVBoxContainer"]
+layout_mode = 2
+
+[node name="BpmVBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
+layout_mode = 2
+
+[node name="BpmLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/BpmVBoxContainer"]
+layout_mode = 2
+text = "BPM"
+
+[node name="BpmSpinBox" type="SpinBox" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/BpmVBoxContainer"]
+layout_mode = 2
+min_value = 60.0
+max_value = 180.0
+value = 120.0
+
+[node name="OctaveRangeVBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
+layout_mode = 2
+
+[node name="OctaveRangeLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer"]
+layout_mode = 2
+text = "Octave Range"
+
+[node name="OctaveRangeSpinBox" type="SpinBox" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer"]
+layout_mode = 2
+max_value = 9.0
+
+[node name="SeedSelectHBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
+layout_mode = 2
+
+[node name="SeedSelectLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/SeedSelectHBoxContainer"]
+layout_mode = 2
+text = "Seed"
+
+[node name="SeedSelectMenuButton" type="MenuButton" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/SeedSelectHBoxContainer"]
+layout_mode = 2
+
+[node name="OffsetVBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
+layout_mode = 2
+
+[node name="OffsetLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/OffsetVBoxContainer"]
+layout_mode = 2
+text = "Offset"
+
+[node name="OffsetMenuButton" type="MenuButton" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/OffsetVBoxContainer"]
+layout_mode = 2
+
+[node name="GridWidthVBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
+layout_mode = 2
+
+[node name="GridWidthLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/GridWidthVBoxContainer"]
+layout_mode = 2
+text = "Grid Width"
+
+[node name="GridWidthOptionButton" type="MenuButton" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/GridWidthVBoxContainer"]
+layout_mode = 2
+
+[node name="GridHeightVBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
+layout_mode = 2
+
+[node name="GridHeightLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/GridHeightVBoxContainer"]
+layout_mode = 2
+text = "Grid Height"
+
+[node name="GridHeightOptionButton" type="MenuButton" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/GridHeightVBoxContainer"]
+layout_mode = 2
+
 [connection signal="pressed" from="RandomizeProbabilityButton" to="." method="_on_randomize_probability_button_pressed"]
+[connection signal="toggled" from="TopBarVBoxContainer/PlayButton" to="." method="_on_play_button_toggled"]
+[connection signal="value_changed" from="TopBarVBoxContainer/SettingsBarHBoxContainer/BpmVBoxContainer/BpmSpinBox" to="." method="_on_bpm_spin_box_value_changed"]
+[connection signal="value_changed" from="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinBox" to="." method="_on_octave_spin_box_value_changed"]

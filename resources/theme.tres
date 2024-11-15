@@ -1,4 +1,42 @@
-[gd_resource type="Theme" format=3 uid="uid://cvey3r3312sfd"]
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://cvey3r3312sfd"]
+
+[ext_resource type="FontFile" uid="uid://drbxlbbtlb5tr" path="res://assets/fonts/Inter-VariableFont_opsz,wght.ttf" id="1_nt0eg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cv3ov"]
+content_margin_top = 7.0
+content_margin_bottom = 7.0
+bg_color = Color(0.0901961, 0.101961, 0.109804, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3vore"]
+content_margin_top = 7.0
+content_margin_bottom = 7.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
 
 [resource]
+default_font = ExtResource("1_nt0eg")
+default_font_size = 12
+Button/font_sizes/font_size = 14
+Button/styles/hover = SubResource("StyleBoxFlat_cv3ov")
+Button/styles/normal = SubResource("StyleBoxFlat_3vore")
 HBoxContainer/constants/separation = 10
+MenuButton/font_sizes/font_size = 14
+PopupMenu/font_sizes/font_size = 14
+VBoxContainer/constants/separation = 10

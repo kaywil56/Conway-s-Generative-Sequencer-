@@ -9,15 +9,15 @@ signal grid_width_selected(width)
 signal grid_height_selected(height)
 signal offset_selected(offset)
 
-@onready var root_note_option_button = $TopBarHBoxContainer/NoteGroupSelectionHBoxContainer/RootNoteOptionButton
-@onready var note_group_option_button = $TopBarHBoxContainer/NoteGroupSelectionHBoxContainer/NoteGroupOptionButton
-@onready var play_button = $TopBarHBoxContainer/PlayButton
-@onready var seed_select_menu_button = $TopBarHBoxContainer/SeedSelectHBoxContainer/SeedSelectMenuButton
-@onready var octave_spinbox  = $TopBarHBoxContainer/OctaveRangeHBoxContainer/OctaveSpinBox
-@onready var bpm_spinbox = $TopBarHBoxContainer/BpmHBoxContainer/BpmSpinBox
-@onready var grid_width_option = $TopBarHBoxContainer/GridSizeHBoxContainer/GridWidthOptionButton
-@onready var grid_height_option = $TopBarHBoxContainer/GridSizeHBoxContainer/GridHeightOptionButton
-@onready var offset_menu_button = $TopBarHBoxContainer/OffsetHBoxContainer/OffsetMenuButton
+@onready var root_note_menu_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/RootNoteVBoxContainer/RootNoteMenuButton
+@onready var chords_and_scales_menu_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/ChordsAndScalesVBoxContainer/ChordsAndScalesMenuButton
+@onready var play_button = $TopBarVBoxContainer/PlayButton
+@onready var seed_select_menu_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/SeedSelectHBoxContainer/SeedSelectMenuButton
+@onready var octave_spinbox  = $TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinBox
+@onready var bpm_spinbox = $TopBarVBoxContainer/SettingsBarHBoxContainer/BpmVBoxContainer/BpmSpinBox
+@onready var grid_width_option_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/GridWidthVBoxContainer/GridWidthOptionButton
+@onready var grid_height_option_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/GridHeightVBoxContainer/GridHeightOptionButton
+@onready var offset_menu_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/OffsetVBoxContainer/OffsetMenuButton
 
 func _ready() -> void:
 	connect_signals()
@@ -29,34 +29,34 @@ func set_octave(octave: int) -> void:
 	octave_spinbox.value = octave
 	
 func init_grid_width_menu() -> void:
-	var popup = grid_width_option.get_popup()
-	var widths = [1, 2, 4, 8, 16]
+	var popup = grid_width_option_button.get_popup()
+	var widths = [4, 8, 16]
 	for i in widths:
-		var value = str(i) + "BAR(S)"
+		var value = str(i) + " Bars"
 		popup.add_item(value)
-	grid_width_option.text = popup.get_item_text(2)
+	grid_width_option_button.text = popup.get_item_text(2)
 
 func init_grid_height_menu() -> void:
-	var popup = grid_height_option.get_popup()
+	var popup = grid_height_option_button.get_popup()
 	for i in range(1, 5):
 		var value = str(i) + "x"
 		popup.add_item(value)
 	var popup_item_text = popup.get_item_text(1)
-	grid_height_option.text = popup_item_text
+	grid_height_option_button.text = popup_item_text
 
 func init_note_group_menu(note_groups: Dictionary) -> void:
-	var popup = note_group_option_button.get_popup()
+	var popup = chords_and_scales_menu_button.get_popup()
 	for i in note_groups:
 		popup.add_separator(i)
 		for j in note_groups[i]:
 			popup.add_item(j)
-	note_group_option_button.text = note_groups[note_groups.keys()[0]].keys()[0]
+	chords_and_scales_menu_button.text = note_groups[note_groups.keys()[0]].keys()[0]
 
 func init_root_select_menu(roots: Array) -> void:
-	var popup = root_note_option_button.get_popup()
+	var popup = root_note_menu_button.get_popup()
 	for idx in range(roots.size()):
 		popup.add_item(roots[idx], idx)
-	root_note_option_button.text = roots[0]	
+	root_note_menu_button.text = roots[0]	
 
 func init_seed_select_menu(seeds: Array) -> void:
 	var popup = seed_select_menu_button.get_popup()
@@ -81,19 +81,19 @@ func init_offset_menu():
 	offset_menu_button.text = popup_item_text
 
 func connect_signals():
-	var popup = note_group_option_button.get_popup()
+	var popup = chords_and_scales_menu_button.get_popup()
 	popup.id_pressed.connect(Callable(self, "_on_note_group_selected"))
 	
-	popup = root_note_option_button.get_popup()
+	popup = root_note_menu_button.get_popup()
 	popup.id_pressed.connect(Callable(self, "_on_root_selected"))
 	
 	popup = seed_select_menu_button.get_popup()
 	popup.id_pressed.connect(Callable(self, "_on_seed_selected"))
 	
-	popup = grid_width_option.get_popup()
+	popup = grid_width_option_button.get_popup()
 	popup.id_pressed.connect(Callable(self, "_on_grid_width_selected"))
 	
-	popup = grid_height_option.get_popup()
+	popup = grid_height_option_button.get_popup()
 	popup.id_pressed.connect(Callable(self, "_on_grid_height_selected"))
 	
 	popup = offset_menu_button.get_popup()
@@ -106,16 +106,16 @@ func _on_offset_selected(id):
 	emit_signal("offset_selected", selected_item)
 
 func _on_note_group_selected(id):
-	var popup = note_group_option_button.get_popup()
+	var popup = chords_and_scales_menu_button.get_popup()
 	var selected_item = popup.get_item_text(id)
-	note_group_option_button.text = selected_item
-	emit_signal("note_group_selected", root_note_option_button.text, selected_item)
+	chords_and_scales_menu_button.text = selected_item
+	emit_signal("note_group_selected", root_note_menu_button.text, selected_item)
 	
 func _on_root_selected(id):
-	var popup = root_note_option_button.get_popup()
+	var popup = root_note_menu_button.get_popup()
 	var selected_item = popup.get_item_text(id)
-	root_note_option_button.text = selected_item
-	emit_signal("note_group_selected", selected_item, note_group_option_button.text)
+	root_note_menu_button.text = selected_item
+	emit_signal("note_group_selected", selected_item, chords_and_scales_menu_button.text)
 	
 func _on_seed_selected(id):
 	var popup = seed_select_menu_button.get_popup()
@@ -144,16 +144,16 @@ func _on_randomize_probability_button_pressed() -> void:
 	emit_signal("randomize_probability")
 
 func _on_grid_width_selected(id: int) -> void:
-	var popup = grid_width_option.get_popup()
+	var popup = grid_width_option_button.get_popup()
 	var selected_item = popup.get_item_text(id)
-	grid_width_option.text = selected_item
+	grid_width_option_button.text = selected_item
 	emit_signal("grid_width_selected", selected_item)
 	
 func _on_grid_height_selected(id: int) -> void:
-	var popup = grid_height_option.get_popup()
+	var popup = grid_height_option_button.get_popup()
 	var selected_item = popup.get_item_text(id)
-	grid_height_option.text = selected_item
+	grid_height_option_button.text = selected_item
 	emit_signal("grid_height_selected", selected_item)
 
 func get_grid_height() -> String:
-	return grid_height_option.text
+	return grid_height_option_button.text

@@ -32,9 +32,6 @@ const NoteGroups = {
 	"Major 9th": [0, 4, 7, 11, 14],
 	"Dominant 7th": [0, 4, 7, 10],
 	"Dominant 9th": [0, 4, 7, 10, 14]
-  },
-  "other": {
-	"Minor-Major Pair": [0, 3, 7, 0, 4, 7],
   }
 };
 

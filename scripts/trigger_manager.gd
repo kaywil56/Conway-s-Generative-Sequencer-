@@ -41,7 +41,7 @@ func is_trigger_at_position(position: Vector2i) -> Node2D:
 	return null
 
 func reached_end():
-	return tile_map_layer.local_to_map(triggers[0].global_position).x == grid_width
+	return tile_map_layer.local_to_map(triggers[0].global_position).x == grid_width - 1
 
 func clear_triggers() -> void:
 	for trigger in triggers:
