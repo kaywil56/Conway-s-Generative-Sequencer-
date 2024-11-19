@@ -48,6 +48,7 @@ func _ready() -> void:
 	note_manager = NoteManager.new(self, tile_map_layer, 2)
 
 	midi.prepare_midi()
+	ui.set_midi_port_item_list(midi.get_ports())
 
 	trigger_manager.add_triggers()
 	trigger_manager.set_trigger_positions()
@@ -94,6 +95,14 @@ func connect_signals() -> void:
 	ui.connect("grid_width_selected", Callable(self, "handle_grid_width_selected"))
 	ui.connect("grid_height_selected", Callable(self, "handle_grid_height_selected"))
 	ui.connect("offset_selected", Callable(self, "handle_offset_selected"))
+	ui.connect("reset_probability", Callable(self, "handle_reset_probability"))
+	ui.connect("port_selected", Callable(self, "handle_port_selected"))
+
+func handle_port_selected(port: int) -> void:
+	midi.open_port(port)
+	
+func handle_reset_probability():
+	note_manager.set_sliders_max()
 
 func handle_offset_selected(value):
 	if value == "None":
@@ -193,7 +202,6 @@ func _on_timer_timeout() -> void:
 	play_notes(cells)
 	game_of_life.next_gen()
 	
-
 func play_notes(cells):
 	play_note_off()
 	for cell in cells:

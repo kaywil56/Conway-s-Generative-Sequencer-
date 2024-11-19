@@ -5,13 +5,15 @@ signal play(toggled)
 signal bpm_selected(bpm)
 signal seed_selected(seed)
 signal randomize_probability
+signal reset_probability
 signal grid_width_selected(width)
 signal grid_height_selected(height)
 signal offset_selected(offset)
+signal port_selected
 
 @onready var root_note_menu_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/RootNoteVBoxContainer/RootNoteMenuButton
 @onready var chords_and_scales_menu_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/ChordsAndScalesVBoxContainer/ChordsAndScalesMenuButton
-@onready var play_button = $TopBarVBoxContainer/PlayButton
+@onready var play_button = $TopBarVBoxContainer/HBoxContainer/PlayButton
 @onready var seed_select_menu_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/SeedSelectHBoxContainer/SeedSelectMenuButton
 @onready var min_octave_spinbox  = $TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer/MinOctaveRangeSpinBox
 @onready var max_octave_spinbox = $TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer/MaxOctaveRangeSpinbox
@@ -19,9 +21,11 @@ signal offset_selected(offset)
 @onready var grid_width_option_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/GridWidthVBoxContainer/GridWidthOptionButton
 @onready var grid_height_option_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/GridHeightVBoxContainer/GridHeightOptionButton
 @onready var offset_menu_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/OffsetVBoxContainer/OffsetMenuButton
+@onready var midi_port_item_list = $SideBarVBoxContainer/MidiPortVBoxContainer/MidiPortItemList
 
 func _ready() -> void:
 	connect_signals()
+	midi_port_item_list.set_auto_height(true)
 	init_grid_width_menu()
 	init_grid_height_menu()
 	init_offset_menu()
@@ -59,6 +63,12 @@ func init_root_select_menu(roots: Array) -> void:
 	for idx in range(roots.size()):
 		popup.add_item(roots[idx], idx)
 	root_note_menu_button.text = roots[0]	
+
+func set_midi_port_item_list(ports) -> void:
+	print(ports)
+	midi_port_item_list.clear()
+	for idx in range(ports.size()):
+		midi_port_item_list.add_item(ports[idx])
 
 func init_seed_select_menu(seeds: Array) -> void:
 	var popup = seed_select_menu_button.get_popup()
@@ -100,13 +110,22 @@ func connect_signals():
 	
 	popup = offset_menu_button.get_popup()
 	popup.id_pressed.connect(Callable(self, "_on_offset_selected"))
+	
+	#popup = midi_port_menu_button.get_popup()
+	#popup.id_pressed.connect(Callable(self, "_on_midi_port_selected"))
 
 func _on_offset_selected(id):
 	var popup = offset_menu_button.get_popup()
 	var selected_item = popup.get_item_text(id)
 	offset_menu_button.text = selected_item
 	emit_signal("offset_selected", selected_item)
-
+	
+#func _on_midi_port_selected(id):
+	#var popup = midi_port_menu_button.get_popup()
+	#var selected_item = popup.get_item_text(id)
+	#midi_port_menu_button.text = selected_item
+	#emit_signal("midi_port_selected", id)
+	
 func _on_note_group_selected(id):
 	var popup = chords_and_scales_menu_button.get_popup()
 	var selected_item = popup.get_item_text(id)
@@ -139,8 +158,6 @@ func _on_bpm_spin_box_value_changed(value: float) -> void:
 func set_play_button(pressed: bool) -> void:
 	play_button.set_pressed(pressed)
 
-
-
 func _on_randomize_probability_button_pressed() -> void:
 	emit_signal("randomize_probability")
 
@@ -171,3 +188,12 @@ func _on_max_octave_range_spinbox_value_changed(value: float) -> void:
 		max_octave_spinbox.value = value + 1
 	else:
 		emit_signal("octave_changed", min_octave_spinbox.value, value)
+
+func _on_reset_probability_button_pressed() -> void:
+	emit_signal("reset_probability")
+
+func _on_midi_port_refresh_button_pressed() -> void:
+	emit_signal("refresh_midi_ports")
+
+func _on_midi_port_item_list_item_selected(index: int) -> void:
+	emit_signal("port_selected", index)

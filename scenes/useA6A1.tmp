@@ -138,7 +138,7 @@ layout_mode = 2
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_right = 200.0
+offset_right = 76.0
 grow_vertical = 2
 
 [node name="ProbabilityVBoxContainer" type="VBoxContainer" parent="SideBarVBoxContainer"]
@@ -159,8 +159,11 @@ layout_mode = 2
 layout_mode = 2
 text = "Midi Port"
 
+[node name="MidiPortRefreshButton" type="Button" parent="SideBarVBoxContainer/MidiPortVBoxContainer"]
+layout_mode = 2
+text = "Refresh"
+
 [node name="MidiPortItemList" type="ItemList" parent="SideBarVBoxContainer/MidiPortVBoxContainer"]
-clip_contents = false
 layout_mode = 2
 
 [connection signal="toggled" from="TopBarVBoxContainer/HBoxContainer/PlayButton" to="." method="_on_play_button_toggled"]
@@ -169,4 +172,3 @@ layout_mode = 2
 [connection signal="value_changed" from="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer/MaxOctaveRangeSpinbox" to="." method="_on_max_octave_range_spinbox_value_changed"]
 [connection signal="pressed" from="SideBarVBoxContainer/ProbabilityVBoxContainer/RandomizeProbabilityButton" to="." method="_on_randomize_probability_button_pressed"]
 [connection signal="pressed" from="SideBarVBoxContainer/ProbabilityVBoxContainer/ResetProbabilityButton" to="." method="_on_reset_probability_button_pressed"]
-[connection signal="item_selected" from="SideBarVBoxContainer/MidiPortVBoxContainer/MidiPortItemList" to="." method="_on_midi_port_item_list_item_selected"]
