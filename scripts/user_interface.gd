@@ -29,6 +29,14 @@ func _ready() -> void:
 	init_grid_width_menu()
 	init_grid_height_menu()
 	init_offset_menu()
+	var children = get_children()
+	disable_focus(children)
+
+func disable_focus(children):
+	for child in children:
+		child.focus_mode = FOCUS_NONE
+		if child.get_child_count() > 0:
+			disable_focus(child.get_children())
 	
 func set_octave(min_octave: int, max_octave: int) -> void:
 	min_octave_spinbox.value = min_octave
@@ -119,12 +127,6 @@ func _on_offset_selected(id):
 	var selected_item = popup.get_item_text(id)
 	offset_menu_button.text = selected_item
 	emit_signal("offset_selected", selected_item)
-	
-#func _on_midi_port_selected(id):
-	#var popup = midi_port_menu_button.get_popup()
-	#var selected_item = popup.get_item_text(id)
-	#midi_port_menu_button.text = selected_item
-	#emit_signal("midi_port_selected", id)
 	
 func _on_note_group_selected(id):
 	var popup = chords_and_scales_menu_button.get_popup()
