@@ -14,173 +14,184 @@ mouse_filter = 1
 theme = ExtResource("2_2ffcj")
 script = ExtResource("1_w57q7")
 
-[node name="TopBarVBoxContainer" type="VBoxContainer" parent="."]
-custom_minimum_size = Vector2(0, 200)
+[node name="ShellVBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -339.0
-offset_right = 339.0
-offset_bottom = 200.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TopBarVBoxContainer"]
+[node name="SideBarPanelContainer" type="PanelContainer" parent="ShellVBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+
+[node name="SideBarVBoxContainer" type="VBoxContainer" parent="ShellVBoxContainer/SideBarPanelContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_direction = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+
+[node name="LogoLabel" type="Label" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "Conway's Sequencer"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer"]
 layout_mode = 2
 
-[node name="PlayButton" type="Button" parent="TopBarVBoxContainer/HBoxContainer"]
+[node name="PlayButton" type="Button" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 focus_mode = 0
 toggle_mode = true
 text = "Play"
 
-[node name="SettingsBarHBoxContainer" type="HBoxContainer" parent="TopBarVBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_constants/separation = 20
-
-[node name="RootNoteVBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
-layout_mode = 2
-
-[node name="RootNoteLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/RootNoteVBoxContainer"]
-layout_mode = 2
-text = "Root"
-
-[node name="RootNoteMenuButton" type="MenuButton" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/RootNoteVBoxContainer"]
-layout_mode = 2
-tooltip_text = "Root Note: The foundational note defining the scale or chord"
-
-[node name="ChordsAndScalesVBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
-layout_mode = 2
-
-[node name="ChordsAndScalesLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/ChordsAndScalesVBoxContainer"]
-layout_mode = 2
-text = "Chords and Scales"
-
-[node name="ChordsAndScalesMenuButton" type="MenuButton" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/ChordsAndScalesVBoxContainer"]
-layout_mode = 2
-tooltip_text = "Note Group: Defines the set of notes to be played"
-
-[node name="BpmVBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
-layout_mode = 2
-
-[node name="BpmLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/BpmVBoxContainer"]
+[node name="BpmLabel" type="Label" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "BPM"
 
-[node name="BpmSpinBox" type="SpinBox" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/BpmVBoxContainer"]
+[node name="BpmVBoxContainer" type="VBoxContainer" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="BpmSpinBox" type="SpinBox" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/HBoxContainer/BpmVBoxContainer"]
 layout_mode = 2
 tooltip_text = "Tempo control: Modify the track's beats per minute (BPM)"
 min_value = 60.0
 max_value = 180.0
 value = 120.0
+alignment = 1
 
-[node name="OctaveRangeVBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
+[node name="MidiPortVBoxContainer" type="VBoxContainer" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer"]
 layout_mode = 2
 
-[node name="OctaveRangeLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer"]
+[node name="MidiPortLabel" type="Label" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/MidiPortVBoxContainer"]
+layout_mode = 2
+text = "Midi Port"
+
+[node name="MidiPortItemList" type="ItemList" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/MidiPortVBoxContainer"]
+clip_contents = false
+layout_mode = 2
+
+[node name="SideBarGridContainer" type="GridContainer" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="RootNoteVBoxContainer" type="VBoxContainer" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer"]
+layout_mode = 2
+
+[node name="RootNoteLabel" type="Label" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/RootNoteVBoxContainer"]
+layout_mode = 2
+text = "Root"
+
+[node name="RootNoteMenuButton" type="MenuButton" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/RootNoteVBoxContainer"]
+layout_mode = 2
+tooltip_text = "Root Note: The foundational note defining the scale or chord"
+flat = false
+
+[node name="ChordsAndScalesVBoxContainer" type="VBoxContainer" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer"]
+layout_mode = 2
+
+[node name="ChordsAndScalesLabel" type="Label" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/ChordsAndScalesVBoxContainer"]
+layout_mode = 2
+text = "Chords and Scales"
+
+[node name="ChordsAndScalesMenuButton" type="MenuButton" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/ChordsAndScalesVBoxContainer"]
+layout_mode = 2
+tooltip_text = "Note Group: Defines the set of notes to be played"
+flat = false
+
+[node name="OffsetVBoxContainer" type="VBoxContainer" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer"]
+layout_mode = 2
+
+[node name="OffsetLabel" type="Label" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/OffsetVBoxContainer"]
+layout_mode = 2
+text = "Offset"
+
+[node name="OffsetMenuButton" type="MenuButton" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/OffsetVBoxContainer"]
+layout_mode = 2
+tooltip_text = "Note variation range: The next note will be randomly selected within ±[offset] steps"
+flat = false
+
+[node name="OctaveRangeVBoxContainer" type="VBoxContainer" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer"]
+layout_mode = 2
+
+[node name="OctaveRangeLabel" type="Label" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/OctaveRangeVBoxContainer"]
 layout_mode = 2
 text = "Octave Range"
 
-[node name="OctaveRangeSpinboxHBoxContainer" type="HBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer"]
+[node name="OctaveRangeSpinboxHBoxContainer" type="HBoxContainer" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/OctaveRangeVBoxContainer"]
 layout_mode = 2
+alignment = 1
 
-[node name="MinOctaveRangeSpinBox" type="SpinBox" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer"]
+[node name="MinOctaveRangeSpinBox" type="SpinBox" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer"]
 layout_mode = 2
 tooltip_text = "Set the lowest/highest octave range for note generation"
 min_value = 1.0
 max_value = 10.0
 value = 4.0
+alignment = 1
 select_all_on_focus = true
 
-[node name="MaxOctaveRangeSpinbox" type="SpinBox" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer"]
+[node name="MaxOctaveRangeSpinbox" type="SpinBox" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer"]
 layout_mode = 2
 tooltip_text = "Set the lowest/highest octave range for note generation"
 min_value = 1.0
 max_value = 10.0
 value = 6.0
+alignment = 1
 
-[node name="SeedSelectHBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
+[node name="SeedSelectHBoxContainer" type="VBoxContainer" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer"]
 layout_mode = 2
 
-[node name="SeedSelectLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/SeedSelectHBoxContainer"]
+[node name="SeedSelectLabel" type="Label" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/SeedSelectHBoxContainer"]
 layout_mode = 2
 text = "Seed"
 
-[node name="SeedSelectMenuButton" type="MenuButton" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/SeedSelectHBoxContainer"]
-layout_mode = 2
-tooltip_text = "Starting pattern for the cellular automaton that generates your melody"
-
-[node name="OffsetVBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
+[node name="SeedHBoxContainer" type="HBoxContainer" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/SeedSelectHBoxContainer"]
 layout_mode = 2
 
-[node name="OffsetLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/OffsetVBoxContainer"]
+[node name="RandomSeedButton" type="Button" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/SeedSelectHBoxContainer/SeedHBoxContainer"]
 layout_mode = 2
-text = "Offset"
+text = "Random"
 
-[node name="OffsetMenuButton" type="MenuButton" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/OffsetVBoxContainer"]
+[node name="ClearSeedButton" type="Button" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/SeedSelectHBoxContainer/SeedHBoxContainer"]
 layout_mode = 2
-tooltip_text = "Note variation range: The next note will be randomly selected within ±[offset] steps"
+text = "Clear"
 
-[node name="GridWidthVBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
-layout_mode = 2
-
-[node name="GridWidthLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/GridWidthVBoxContainer"]
-layout_mode = 2
-text = "Grid Width"
-
-[node name="GridWidthOptionButton" type="MenuButton" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/GridWidthVBoxContainer"]
-layout_mode = 2
-tooltip_text = "Set the length of your melody in bars (e.g., 4 bars creates a 4-bar loop)"
-
-[node name="GridHeightVBoxContainer" type="VBoxContainer" parent="TopBarVBoxContainer/SettingsBarHBoxContainer"]
+[node name="ProbabilityVBoxContainer" type="VBoxContainer" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer"]
 layout_mode = 2
 
-[node name="GridHeightLabel" type="Label" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/GridHeightVBoxContainer"]
+[node name="ProbabilityLabel" type="Label" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/ProbabilityVBoxContainer"]
 layout_mode = 2
-text = "Grid Height"
+text = "Note Probabilties"
 
-[node name="GridHeightOptionButton" type="MenuButton" parent="TopBarVBoxContainer/SettingsBarHBoxContainer/GridHeightVBoxContainer"]
-layout_mode = 2
-tooltip_text = "Set the vertical range of notes"
-
-[node name="SideBarVBoxContainer" type="VBoxContainer" parent="."]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 1
-anchors_preset = 9
-anchor_bottom = 1.0
-offset_right = 200.0
-grow_vertical = 2
-
-[node name="MidiPortVBoxContainer" type="VBoxContainer" parent="SideBarVBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/ProbabilityVBoxContainer"]
 layout_mode = 2
 
-[node name="MidiPortLabel" type="Label" parent="SideBarVBoxContainer/MidiPortVBoxContainer"]
-layout_mode = 2
-text = "Midi Port"
-
-[node name="MidiPortItemList" type="ItemList" parent="SideBarVBoxContainer/MidiPortVBoxContainer"]
-clip_contents = false
-layout_mode = 2
-
-[node name="ProbabilityVBoxContainer" type="VBoxContainer" parent="SideBarVBoxContainer"]
-layout_mode = 2
-
-[node name="RandomizeProbabilityButton" type="Button" parent="SideBarVBoxContainer/ProbabilityVBoxContainer"]
+[node name="RandomizeProbabilityButton" type="Button" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/ProbabilityVBoxContainer/HBoxContainer"]
 layout_mode = 2
 tooltip_text = "Shuffle the likelihood of each note being selected in the melody"
 text = "Randomize"
 
-[node name="ResetProbabilityButton" type="Button" parent="SideBarVBoxContainer/ProbabilityVBoxContainer"]
+[node name="ResetProbabilityButton" type="Button" parent="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/ProbabilityVBoxContainer/HBoxContainer"]
 layout_mode = 2
 tooltip_text = "Return all note probabilities to their default values"
 text = "Reset"
 
-[connection signal="toggled" from="TopBarVBoxContainer/HBoxContainer/PlayButton" to="." method="_on_play_button_toggled"]
-[connection signal="value_changed" from="TopBarVBoxContainer/SettingsBarHBoxContainer/BpmVBoxContainer/BpmSpinBox" to="." method="_on_bpm_spin_box_value_changed"]
-[connection signal="value_changed" from="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer/MinOctaveRangeSpinBox" to="." method="_on_min_octave_range_spin_box_value_changed"]
-[connection signal="value_changed" from="TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer/MaxOctaveRangeSpinbox" to="." method="_on_max_octave_range_spinbox_value_changed"]
-[connection signal="item_selected" from="SideBarVBoxContainer/MidiPortVBoxContainer/MidiPortItemList" to="." method="_on_midi_port_item_list_item_selected"]
-[connection signal="pressed" from="SideBarVBoxContainer/ProbabilityVBoxContainer/RandomizeProbabilityButton" to="." method="_on_randomize_probability_button_pressed"]
-[connection signal="pressed" from="SideBarVBoxContainer/ProbabilityVBoxContainer/ResetProbabilityButton" to="." method="_on_reset_probability_button_pressed"]
+[connection signal="toggled" from="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/HBoxContainer/PlayButton" to="." method="_on_play_button_toggled"]
+[connection signal="value_changed" from="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/HBoxContainer/BpmVBoxContainer/BpmSpinBox" to="." method="_on_bpm_spin_box_value_changed"]
+[connection signal="item_selected" from="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/MidiPortVBoxContainer/MidiPortItemList" to="." method="_on_midi_port_item_list_item_selected"]
+[connection signal="value_changed" from="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer/MinOctaveRangeSpinBox" to="." method="_on_min_octave_range_spin_box_value_changed"]
+[connection signal="value_changed" from="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer/MaxOctaveRangeSpinbox" to="." method="_on_max_octave_range_spinbox_value_changed"]
+[connection signal="pressed" from="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/SeedSelectHBoxContainer/SeedHBoxContainer/RandomSeedButton" to="." method="_on_random_seed_button_pressed"]
+[connection signal="pressed" from="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/SeedSelectHBoxContainer/SeedHBoxContainer/ClearSeedButton" to="." method="_on_clear_seed_button_pressed"]
+[connection signal="pressed" from="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/ProbabilityVBoxContainer/HBoxContainer/RandomizeProbabilityButton" to="." method="_on_randomize_probability_button_pressed"]
+[connection signal="pressed" from="ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/ProbabilityVBoxContainer/HBoxContainer/ResetProbabilityButton" to="." method="_on_reset_probability_button_pressed"]

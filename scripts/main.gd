@@ -64,7 +64,6 @@ func _ready() -> void:
 	
 	ui.init_root_select_menu(notes)
 	ui.init_note_group_menu(note_groups)
-	ui.init_seed_select_menu(pattern_names)
 	ui.set_octave(4, 6)
 
 	connect_signals()
@@ -75,16 +74,8 @@ func center_camera():
 	var used_rect_size = used_rect.size
 	var tile_size = tile_map_layer.tile_set.tile_size
 	var size = used_rect_size * tile_size
-	camera.set_position(Vector2(size.x / 2, size.y / 2))
-	var viewport_size = get_viewport_rect().size
-	var padding = 1.5
-	var zoom_x = (viewport_size.x / size.x) / padding
-	var zoom_y = (viewport_size.y / size.y) / padding
-	var zoom = min(zoom_x, zoom_y)
-	zoom = clamp(zoom, 0.1, 1.0)
-	camera.zoom = Vector2(zoom, zoom)
-	camera.position.y -= 15
-	
+	camera.set_position(Vector2((size.x - ui.get_side_bar_width() - note_manager.get_note_width()) / 2, size.y / 2))
+
 func connect_signals() -> void:
 	ui.connect("note_group_selected", Callable(self, "handle_note_group_selected"))
 	ui.connect("play", Callable(self, "handle_play"))
@@ -92,8 +83,6 @@ func connect_signals() -> void:
 	ui.connect("seed_selected", Callable(self, "handle_seed_selected"))
 	ui.connect("octave_changed", Callable(self, "handle_octave_selected"))
 	ui.connect("randomize_probability", Callable(self, "handle_randomize_probability"))
-	ui.connect("grid_width_selected", Callable(self, "handle_grid_width_selected"))
-	ui.connect("grid_height_selected", Callable(self, "handle_grid_height_selected"))
 	ui.connect("offset_selected", Callable(self, "handle_offset_selected"))
 	ui.connect("reset_probability", Callable(self, "handle_reset_probability"))
 	ui.connect("port_selected", Callable(self, "handle_port_selected"))
@@ -112,39 +101,6 @@ func handle_offset_selected(value):
 	new_offset = new_offset.replace("/", "")
 	new_offset = new_offset.replace("1", "")
 	offset = int(new_offset)
-
-func handle_grid_height_selected(height: String) -> void:
-	var height_value = height.left(1)
-	height_value = int(height_value) * note_manager.get_note_group().size()
-	game_of_life.set_grid_height(height_value)
-	game_of_life.generate_pattern()
-	var cells = game_of_life.get_cells()
-	draw_grid(cells)
-	center_camera()
-	trigger_manager.set_grid_height(height_value)
-	trigger_manager.clear_triggers()
-	trigger_manager.add_triggers()
-	trigger_manager.set_trigger_positions()
-	
-	note_manager.set_grid_height_multi(int(height.left(1)))
-	note_manager.clear_notes()
-	note_manager.add_notes()
-	note_manager.set_notes()
-	note_manager.set_sliders_max()
-	
-func handle_grid_width_selected(width: String) -> void:
-	var width_value = width.replace("BAR(S)","")
-	width_value = Bar * int(width_value)
-	print(width_value)
-	game_of_life.set_grid_width(width_value)
-	game_of_life.generate_pattern()
-	var cells = game_of_life.get_cells()
-	draw_grid(cells)
-	center_camera()
-	trigger_manager.set_grid_width(width_value)
-	trigger_manager.clear_triggers()
-	trigger_manager.add_triggers()
-	trigger_manager.set_trigger_positions()
 
 func handle_octave_selected(min_octave: int, max_octave: int) -> void:
 	note_manager.set_octave(min_octave, max_octave)
@@ -178,8 +134,6 @@ func handle_bpm_selected(new_bpm):
 func handle_note_group_selected(root, note_groups) -> void:
 	var notes_in_group = scale_manager.get_notes_in_group(root, note_groups)
 	note_manager.set_note_group(notes_in_group)
-	var grid_height_value = ui.get_grid_height()
-	handle_grid_height_selected(grid_height_value)
 	
 func _on_timer_timeout() -> void:
 	var base = (60.0 / bpm)

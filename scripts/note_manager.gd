@@ -60,6 +60,10 @@ func get_note_by_row(y: int) -> Node2D:
 	else:
 		return null
 
+func get_note_width():
+	if note_instances:
+		return note_instances[0].get_width()
+
 func set_sliders_max() -> void:
 	for note in note_instances:
 		note_instances[note].set_slider(10)

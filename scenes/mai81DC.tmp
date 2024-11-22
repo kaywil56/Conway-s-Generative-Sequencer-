@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://oaq7vocf5mvb"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_gxiwc"]
+[ext_resource type="Texture2D" uid="uid://c1woxaje73u3u" path="res://assets/spritesheet.png" id="2_bh6fx"]
+[ext_resource type="PackedScene" uid="uid://dcnnbasokgb2x" path="res://scenes/user_interface.tscn" id="3_ehgfd"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7t54q"]
+texture = ExtResource("2_bh6fx")
+texture_region_size = Vector2i(30, 30)
+0:0/0 = 0
+1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_0ug3u"]
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_7t54q")
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_gxiwc")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_set = SubResource("TileSet_0ug3u")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.25
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -6
+
+[node name="UserInterface" parent="CanvasLayer" instance=ExtResource("3_ehgfd")]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

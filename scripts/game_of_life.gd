@@ -17,9 +17,7 @@ func _init(new_grid_width, new_grid_height) -> void:
 func initialize_patterns() -> void:
 	patterns = {
 		"Blank": BlankPattern.new(),
-		"Random": RandomPattern.new(),
-		"Blinker": BlinkerPattern.new(),
-		"Glider": GliderPattern.new()
+		"Random": RandomPattern.new()
 	}
 	
 func set_pattern(pattern_name: String) -> void:
@@ -69,9 +67,3 @@ func add_cell(position: Vector2i) -> void:
 	
 func remove_cell(position: Vector2i) -> void:
 	cells[position] = 0
-
-func set_grid_height(height: int) -> void:
-	grid_height = height
-
-func set_grid_width(width: int) -> void:
-	grid_width = width

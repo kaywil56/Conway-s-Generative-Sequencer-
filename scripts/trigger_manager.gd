@@ -47,9 +47,3 @@ func clear_triggers() -> void:
 	for trigger in triggers:
 		trigger.queue_free()
 	triggers.clear()
-
-func set_grid_width(width: int) -> void:
-	grid_width = width
-
-func set_grid_height(height: int) -> void:
-	grid_height = height

@@ -6,58 +6,45 @@ signal bpm_selected(bpm)
 signal seed_selected(seed)
 signal randomize_probability
 signal reset_probability
-signal grid_width_selected(width)
-signal grid_height_selected(height)
 signal offset_selected(offset)
 signal port_selected
 
-@onready var root_note_menu_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/RootNoteVBoxContainer/RootNoteMenuButton
-@onready var chords_and_scales_menu_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/ChordsAndScalesVBoxContainer/ChordsAndScalesMenuButton
-@onready var play_button = $TopBarVBoxContainer/HBoxContainer/PlayButton
-@onready var seed_select_menu_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/SeedSelectHBoxContainer/SeedSelectMenuButton
-@onready var min_octave_spinbox  = $TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer/MinOctaveRangeSpinBox
-@onready var max_octave_spinbox = $TopBarVBoxContainer/SettingsBarHBoxContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer/MaxOctaveRangeSpinbox
-@onready var bpm_spinbox = $TopBarVBoxContainer/SettingsBarHBoxContainer/BpmVBoxContainer/BpmSpinBox
-@onready var grid_width_option_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/GridWidthVBoxContainer/GridWidthOptionButton
-@onready var grid_height_option_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/GridHeightVBoxContainer/GridHeightOptionButton
-@onready var offset_menu_button = $TopBarVBoxContainer/SettingsBarHBoxContainer/OffsetVBoxContainer/OffsetMenuButton
-@onready var midi_port_item_list = $SideBarVBoxContainer/MidiPortVBoxContainer/MidiPortItemList
+@onready var root_note_menu_button = $ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/RootNoteVBoxContainer/RootNoteMenuButton
+@onready var chords_and_scales_menu_button = $ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/ChordsAndScalesVBoxContainer/ChordsAndScalesMenuButton
+@onready var play_button = $ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/HBoxContainer/PlayButton
+@onready var seed_select_menu_button = $ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/SeedSelectHBoxContainer/SeedSelectMenuButton
+@onready var min_octave_spinbox  = $ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer/MinOctaveRangeSpinBox
+@onready var max_octave_spinbox = $ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/OctaveRangeVBoxContainer/OctaveRangeSpinboxHBoxContainer/MaxOctaveRangeSpinbox
+@onready var bpm_spinbox = $ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/BpmVBoxContainer/BpmSpinBox
+@onready var offset_menu_button = $ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/SideBarGridContainer/OffsetVBoxContainer/OffsetMenuButton
+@onready var midi_port_item_list = $ShellVBoxContainer/SideBarPanelContainer/SideBarVBoxContainer/MidiPortVBoxContainer/MidiPortItemList
+@onready var side_bar_panel = $ShellVBoxContainer/SideBarPanelContainer
 
 func _ready() -> void:
 	connect_signals()
 	midi_port_item_list.set_auto_height(true)
-	init_grid_width_menu()
-	init_grid_height_menu()
 	init_offset_menu()
 	var children = get_children()
 	disable_focus(children)
-
+	
 func disable_focus(children):
 	for child in children:
+		if child is SpinBox:
+			var line_edit: LineEdit = child.get_line_edit()
+			line_edit.focus_mode = FOCUS_NONE
+			line_edit.selecting_enabled = false
+			line_edit.mouse_default_cursor_shape = Control.CURSOR_ARROW
 		child.focus_mode = FOCUS_NONE
 		if child.get_child_count() > 0:
 			disable_focus(child.get_children())
-	
+
+func get_side_bar_width() -> float:
+	return side_bar_panel.get_rect().size.x
+
 func set_octave(min_octave: int, max_octave: int) -> void:
 	min_octave_spinbox.value = min_octave
 	max_octave_spinbox.value = max_octave
 	
-func init_grid_width_menu() -> void:
-	var popup = grid_width_option_button.get_popup()
-	var widths = [4, 8, 16]
-	for i in widths:
-		var value = str(i) + " Bars"
-		popup.add_item(value)
-	grid_width_option_button.text = popup.get_item_text(2)
-
-func init_grid_height_menu() -> void:
-	var popup = grid_height_option_button.get_popup()
-	for i in range(1, 5):
-		var value = str(i) + "x"
-		popup.add_item(value)
-	var popup_item_text = popup.get_item_text(1)
-	grid_height_option_button.text = popup_item_text
-
 func init_note_group_menu(note_groups: Dictionary) -> void:
 	var popup = chords_and_scales_menu_button.get_popup()
 	for i in note_groups:
@@ -77,12 +64,6 @@ func set_midi_port_item_list(ports) -> void:
 	midi_port_item_list.clear()
 	for idx in range(ports.size()):
 		midi_port_item_list.add_item(ports[idx])
-
-func init_seed_select_menu(seeds: Array) -> void:
-	var popup = seed_select_menu_button.get_popup()
-	for idx in range(seeds.size()):
-		popup.add_item(seeds[idx], idx)
-	seed_select_menu_button.text = seeds[0]
 
 func init_offset_menu():
 	var popup = offset_menu_button.get_popup()
@@ -106,21 +87,9 @@ func connect_signals():
 	
 	popup = root_note_menu_button.get_popup()
 	popup.id_pressed.connect(Callable(self, "_on_root_selected"))
-	
-	popup = seed_select_menu_button.get_popup()
-	popup.id_pressed.connect(Callable(self, "_on_seed_selected"))
-	
-	popup = grid_width_option_button.get_popup()
-	popup.id_pressed.connect(Callable(self, "_on_grid_width_selected"))
-	
-	popup = grid_height_option_button.get_popup()
-	popup.id_pressed.connect(Callable(self, "_on_grid_height_selected"))
-	
+		
 	popup = offset_menu_button.get_popup()
 	popup.id_pressed.connect(Callable(self, "_on_offset_selected"))
-	
-	#popup = midi_port_menu_button.get_popup()
-	#popup.id_pressed.connect(Callable(self, "_on_midi_port_selected"))
 
 func _on_offset_selected(id):
 	var popup = offset_menu_button.get_popup()
@@ -163,21 +132,6 @@ func set_play_button(pressed: bool) -> void:
 func _on_randomize_probability_button_pressed() -> void:
 	emit_signal("randomize_probability")
 
-func _on_grid_width_selected(id: int) -> void:
-	var popup = grid_width_option_button.get_popup()
-	var selected_item = popup.get_item_text(id)
-	grid_width_option_button.text = selected_item
-	emit_signal("grid_width_selected", selected_item)
-	
-func _on_grid_height_selected(id: int) -> void:
-	var popup = grid_height_option_button.get_popup()
-	var selected_item = popup.get_item_text(id)
-	grid_height_option_button.text = selected_item
-	emit_signal("grid_height_selected", selected_item)
-
-func get_grid_height() -> String:
-	return grid_height_option_button.text
-
 func _on_min_octave_range_spin_box_value_changed(value: float) -> void:
 	print("test")
 	if max_octave_spinbox.value == value:
@@ -199,3 +153,9 @@ func _on_midi_port_refresh_button_pressed() -> void:
 
 func _on_midi_port_item_list_item_selected(index: int) -> void:
 	emit_signal("port_selected", index)
+
+func _on_clear_seed_button_pressed() -> void:
+	emit_signal("seed_selected", "Blank")
+
+func _on_random_seed_button_pressed() -> void:
+	emit_signal("seed_selected", "Random")
